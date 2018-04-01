@@ -16,4 +16,29 @@ class Display extends MY_Controller {
 		$data['orders'] = $this->display_model->get_orders();
 		$this->load->view('display/main', $data);
 	}
+
+	public function get_order(){
+		echo json_encode($this->display_model->get_order());
+	}
+
+	public function finish_order(){
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('trans_details_id', 'Item Name', 'trim|strip_tags');
+
+		if($this->form_validation->run() == FALSE){
+			$this->session->set_flashdata('failed', 'Failed!');
+			$this->index();
+		}
+		else{
+			$query = $this->display_model->finish_orders();
+			if($query){
+				$this->session->set_flashdata('success', 'Successful!');
+				redirect('display');
+			}
+			else{
+				$this->session->set_flashdata('failed', 'Failed!');
+				redirect('display');
+			}
+		}
+	}
 }

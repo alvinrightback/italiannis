@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="Italianni's Restaurant">
 	<meta name="author" content="Italianni's Restaurant">
-	<link rel="icon" href="assets/img/favicon.png">
+	<link rel="icon" href="<?php echo base_url('favicon.ico');?>">
 
 	<title>Login Page - Italianni's Restaurant</title>
 

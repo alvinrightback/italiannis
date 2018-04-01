@@ -5,7 +5,7 @@ class Transaction extends MY_Controller {
 
 	public function __construct(){
 		parent::__construct();
-		$this->load->model('inventory_model');
+		$this->load->model('transaction_model');
 	}
 
 
@@ -13,8 +13,12 @@ class Transaction extends MY_Controller {
 		$data['title'] = "Transaction";
 		$data['success'] = $this->session->flashdata('success');
 		$data['failed'] = $this->session->flashdata('failed');
-		$data['inventory'] = $this->get_data->get_all_value_and_order_by('inventory', 'name', 'asc');
+		$data['transaction'] = $this->get_data->get_all_value_and_order_by('transaction', 'date_created', 'desc');
 		$this->render('transaction/main', $data);
+	}
+
+	public function get_transaction_details(){
+		echo json_encode($this->transaction_model->get_transaction_details());
 	}
 
 	public function add_now(){

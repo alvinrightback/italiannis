@@ -10,7 +10,6 @@
 			'dataType' : 'json',
 			'cache' : false,
 			'success' : function(data){ 
- 					//$('#viewCitizen').modal('toggle');
  					$('#Item_Name').val(data['item_details'][0]['name']);
  					$('#Item_Quantity').val(data['item_details'][0]['quantity']);
  					$('#Item_Details_Inventory_ID').val(data['item_details'][0]['inventory_id']);

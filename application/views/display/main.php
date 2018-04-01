@@ -40,64 +40,105 @@
 
     <!-- QuillPro Styles -->
     <link rel="stylesheet" href="<?php echo base_url('assets/css/quillpro/quillpro.css'); ?>">
+    <script type="text/javascript">
+        
+        function showFinishModal(id){
+            $('#finishModal').modal('toggle');
+            $.ajax({
+            'url' : '<?php  echo base_url('display/get_order/'); ?>',
+            'type' : 'POST', 
+            'data' : {'id' : id},
+            'dataType' : 'json',
+            'cache' : false,
+            'success' : function(data){
+                    $('#orderList').html('');
+                    $.each(data, function(index, value) {
+                        $('#orderList').append('<div class="form-check"><input class="form-check-input" type="checkbox" name="trans_details_id[]" value='+value.trans_details_id+' id="defaultCheck1"><label class="form-check-label" for="defaultCheck1">'+value.name+'</label></div>');
+                     });
+                }
+            });
+        }
+    </script>
 </head>
 <body>
-<div class="container-fluid">
+    <div class="container-fluid">
         <div class="row">
             <nav class="navbar-sidebar-horizontal navbar navbar-expand-lg navbar-light bg-white">
                 <a class="navbar-brand" href="<?php echo base_url(); ?>">
                     <img src="<?php echo base_url('assets/img/logo.png'); ?>" width="185" height="42.3" alt="QuillPro">
                 </a>
-                
 
-                <!--  DEPRECATED CODE:
-                    <div class="navbar-collapse" id="navbarSupportedContent">
-                -->
-                <!-- USE THIS CODE Instead of the Commented Code Above -->
-                <!-- .collapse added to the element -->
-                <div class="collapse navbar-collapse" id="navbar-header-content">
-                    <ul class="navbar-nav navbar-language-translation mr-auto">
-                        
-                    </ul>
-                    
-                    <ul class="navbar-nav ml-5 navbar-profile">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbar-dropdown-navbar-profile" data-toggle="dropdown" data-flip="false" aria-haspopup="true" aria-expanded="false">
-                                <div class="profile-name">
-                                    Administrator
-                                </div>
-                                <div class="profile-picture bg-gradient bg-primary has-message float-right">
-                                    <img src="<?php echo base_url('assets/img/profile-pic.jpg'); ?>" width="44" height="44">
-                                </div>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-dropdown-navbar-profile">
-                                <li><a class="dropdown-item" href="<?php echo base_url('user/change_password'); ?>">Change Password</a></li>
-                                <li><a class="dropdown-item" href="<?php echo base_url('logout'); ?>">Logout</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-            <div class="right-column">
-                <main class="main-content p-5" role="main">
+                    <div class="collapse navbar-collapse" id="navbar-header-content">
+                        <ul class="navbar-nav navbar-language-translation mr-auto">
+
+                        </ul>
+
+                        <ul class="navbar-nav ml-5 navbar-profile">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbar-dropdown-navbar-profile" data-toggle="dropdown" data-flip="false" aria-haspopup="true" aria-expanded="false">
+                                    <div class="profile-name">
+                                        Administrator
+                                    </div>
+                                    <div class="profile-picture bg-gradient bg-primary has-message float-right">
+                                        <img src="<?php echo base_url('assets/img/profile-pic.jpg'); ?>" width="44" height="44">
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-dropdown-navbar-profile">
+                                    <li><a class="dropdown-item" href="<?php echo base_url('user/change_password'); ?>">Change Password</a></li>
+                                    <li><a class="dropdown-item" href="<?php echo base_url('logout'); ?>">Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="right-column">
+                    <main class="main-content p-5" role="main">
+                        <div class="modal fade" id="finishModal" tabindex="-1" role="dialog" aria-labelledby="finishModal" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Select finished order</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <?php echo form_open('display/finish_order'); ?>
+                                        <div id="orderList"></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row my-5 pt-5 clearfix">
                         <div class="col-md-12">
                             <h1 class="text-center">Order List</h1>
                             <div class="price-list-type-2 clearfix">
                                 <?php if(is_array($orders)): ?>
                                     <?php foreach($orders as $row): ?>
+                                    <?php if(isset($row->orders)): ?>
                                         <div class="plan">
                                             <h3 class="plan-title">
                                                 <?php echo $row->table_number; ?>
                                             </h3>
-                                            <div class="plan-cost"><span class="plan-price">$19</span><span class="plan-type">/ Monthly</span></div>
                                             <ul class="plan-features">
                                                 <?php foreach ($row->orders as $key => $value): ?>
                                                     <li><?php echo $value->name.' - '.$value->remark; ?></li>
                                                 <?php endforeach ?>
                                             </ul>
+                                            <div class="plan-select">
+                                                <button class="btn btn-primary" onclick="showFinishModal('<?php echo $row->trans_id; ?>')">Finish</button>
+                                            </div>
                                         </div>
+                                    <?php endif; ?>
                                     <?php endforeach; ?>
+                                <?php else: ?>
+                                    <hr>
+                                    <h2>No orders yet</h2>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -146,7 +187,7 @@
     <script type="text/javascript" src="<?php echo base_url('assets/plugins/chartjs/chart.bundle.min.js'); ?>"></script>
     <!-- Image Placeholder -->
     <script type="text/javascript" src="<?php echo base_url('assets/js/misc/holder.min.js'); ?>"></script>
-        <!-- jQuery Easing -->
+    <!-- jQuery Easing -->
     <script type="text/javascript" src="<?php echo base_url('assets/js/misc/jquery.easing.1.3.js'); ?>"></script>
     <!-- Toastr -->
     <script type="text/javascript" src="<?php echo base_url('assets/plugins/toastr/toastr.min.js'); ?>"></script>
@@ -159,8 +200,7 @@
 
     <!-- QuillPro Scripts -->
     <script type="text/javascript" src="<?php echo base_url('assets/js/scripts.js'); ?>"></script>
-     
+
 </body>
 </html>
 
-            

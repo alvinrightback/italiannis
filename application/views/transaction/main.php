@@ -1,43 +1,91 @@
 <script type="text/javascript">
 	
-	function getItemDetails(id){
-		$('#table_item_history').DataTable().destroy();
-		$('#Item_Details').css('display', 'block');
+	function getTransactionDetails(id){
+		$('#table_orders').DataTable().destroy();
+		$('#Transaction_Details').css('display', 'block');
+		$('#Transaction_Details_Progress').css('display', 'block');
+		$('#Transaction_Details_Body').css('display', 'none');
+		$('#Payment_Details_Complete').css('display', 'none');
+		$('#Transaction_Details_Status').removeAttr( "class");
+		$('#Transaction_Details_Status').css('display', 'none');
 		$.ajax({
-			'url' : '<?php  echo base_url('inventory/get_item_details/'); ?>',
+			'url' : '<?php  echo base_url('transaction/get_transaction_details/'); ?>',
 			'type' : 'POST', 
 			'data' : {'id' : id},
 			'dataType' : 'json',
 			'cache' : false,
 			'success' : function(data){ 
- 					//$('#viewCitizen').modal('toggle');
- 					$('#Item_Name').val(data['item_details'][0]['name']);
- 					$('#Item_Quantity').val(data['item_details'][0]['quantity']);
- 					$('#Item_Details_Inventory_ID').val(data['item_details'][0]['inventory_id']);
+ 					$('#Transaction_Table_Number').text('Table number: '+data[0].table_number);
+ 					$('#Transaction_Date').text('Date: '+data[0].date_created);
+					if(data[0].status == 0){
+						$('#Transaction_Details_Status').addClass("badge badge-warning");
+						$('#Transaction_Details_Status').text("Pending");
+					}
+					else if(data[0].status == 1){
+						$('#Transaction_Details_Status').addClass("badge badge-info");
+						$('#Transaction_Details_Status').text("Bill-out");
+					}
+					else if(data[0].status == 2){
+						$('#Transaction_Details_Status').addClass("badge badge-success");
+						$('#Transaction_Details_Status').text("Completed");
+					}
+					else{
+						//Do Nothing
+					}
+					$('#Transaction_Details_Status').css('display', 'block');
 
- 					var myTable = $('#table_item_history').DataTable({
- 						"paging": true,
+					if(data[0].payment){
+						$('#Payment_Details').css('display', 'block');	 
+						var payment_type = data[0].payment[0].payment_type == 1? 'Cash':'Card';
+						var discount = data[0].payment[0].discount == 1? 'Yes':'No';
+						$('#Transaction_Payment_Type').text("Type: "+payment_type);
+						$('#Transaction_Payment_Total').text("Total: "+data[0].payment[0].total);
+						$('#Transaction_Payment_Discount').text("Discount: "+discount);
+					 }
+					 else{
+						$('#Payment_Details').css('display', 'none');	 
+					 }
+
+					if(data[0].status == 1){
+						$('#Payment_Details_Complete').css('display', 'block');	 
+					}
+					else{
+						$('#Payment_Details_Complete').css('display', 'none');	 
+					}
+
+ 					var myTable = $('#table_orders').DataTable({
+ 						"paging": false,
  						"lengthChange": false,
- 						"searching": true,
+ 						"searching": false,
  						"ordering": true,
- 						"info": true,
+ 						"info": false,
  						"autoWidth": true,
  						"columns": [{
+ 							"title": "Name",
+ 							"data": "name"
+ 						}, {
  							"title": "Quantity",
  							"data": "quantity"
+
  						}, {
- 							"title": "Date Added",
- 							"data": "date_created"
+ 							"title": "Status",
+ 							"data": "order_status"
 
  						}]
  					});
 
- 					myTable.clear();
- 					$.each(data['item_history'], function(index, value) {
- 						myTable.row.add(value);
- 					});
+ 					 myTable.clear();
+ 					 $.each(data[0].orders, function(index, value) {
+ 					 	myTable.row.add(value);
+ 					 });
  					myTable.draw();
- 				}
+ 				},
+			complete: function(){
+				$('#Transaction_Details_Progress').css('display', 'none');
+				$('#Transaction_Details_Body').css('display', 'block');
+			}	 
+
+
  			});
 	}
 
@@ -57,65 +105,42 @@
 	}
 	?>
 
-	<div class="modal fade" id="exampleModalToolTip" tabindex="-1" role="dialog" aria-labelledby="exampleModalToolTip" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLongTitle">Add New Item</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<?php echo form_open('inventory/add_now'); ?>
-					<div class="form-group">
-						<label for="exampleFormControlInput1">Item Name</label>
-						<input type="text" class="form-control" id="itemName" name="Item_Name" placeholder="e.g. garlic, tomatoes, beans etc. " required>
-					</div>
-					<div class="form-group">
-						<label for="exampleFormControlInput1">Quantity</label>
-						<input type="number" class="form-control" id="quantity" name="Quantity" placeholder="Quantity" required>
-					</div>
-
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary">Submit</button>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
-
-
 <div class="row">
-	<div class="col-md-6 col-lg-6 col-xl-8 mb-5">
+	<div class="col-md-6 col-lg-6 col-xl-6 mb-5">
 		<div class="card">
 			<div class="card-header">
-				Ingredients
-				<div class="header-btn-block">
-					<button type="button" data-toggle="modal" data-target="#exampleModalToolTip" class="btn btn-primary">
-						<i class="batch-icon batch-icon-add"></i> 
-						New Item
-					</button>
-				</div>
+				Transactions
 			</div>
 			<div class="card-body">
 
-				<?php if(is_array($inventory)): ?>
+				<?php if(is_array($transaction)): ?>
 					<div class="table-responsive">
 						<table id="datatable-1" class="table table-datatable table-bordered table-hover">
 							<thead class="thead-dark">
 								<tr>
-									<th>Item Name</th>
-									<th>Quantity</th>
+									<th>Table Number</th>
+									<th>Date</th>
+									<th>Status</th>
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach($inventory as $row): ?>
-									<tr style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="View Item" onclick="javascript:getItemDetails(<?php echo $row->inventory_id; ?>)">
-										<td><?php echo $row->name; ?></td>
-										<td><?php echo $row->quantity;	 ?></td>
+								<?php foreach($transaction as $row): ?>
+									<tr style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="View Transaction" onclick="javascript:getTransactionDetails(<?php echo $row->trans_id; ?>)">
+										<td><?php echo $row->table_number; ?></td>
+										<td><?php echo date('Y-m-d h:i A', strtotime($row->date_created));	 ?></td>
+										<td class="text-center">
+											<span class="badge 
+												<?php if($row->status == 0){echo 'badge-warning';} 
+													  else if($row->status == 1){echo 'badge-info';}
+													  else if($row->status == 2){echo 'badge-success';}
+													  else{echo '';}	
+												?>">
+												<?php if($row->status == 0){echo 'Pending';} 
+													  else if($row->status == 1){echo 'Bill-out';}
+													  else if($row->status == 2){echo 'Completed';}
+													  else{echo '';}	
+												?>
+										</td>
 									</tr>
 								<?php endforeach; ?>
 							</tbody>
@@ -127,42 +152,45 @@
 			</div>
 		</div>
 	</div>
-	<div id="Item_Details" style="display: none;" class="col-md-6 col-lg-6 col-xl-4 mb-5">
+	<div id="Transaction_Details" style="display: none;" class="col-md-6 col-lg-6 col-xl-6 mb-5">
 		<div class="card">
 			<div class="card-header">
-				Edit Item
+				Transaction Details
+				<div class="header-btn-block">
+					<span id="Transaction_Details_Status" style="display: none;"></span>
+				</div>
 			</div>
 			<div class="card-body">
-				<?php echo form_open('inventory/edit_now'); ?>
-				<div class="form-row">
-					<div class="col-md-9 mb-3">
-						<label>Item Name</label>
-						<input id="Item_Name" type="text" class="form-control" name="Item_Details_Name" required>
-					</div>
-					<div class="col-md-3 mb-3">
-						<label>Quantity</label>
-						<input id="Item_Quantity" type="number" class="form-control" name="Item_Details_Quantity" required>
-						<input id="Item_Details_Inventory_ID" type="hidden" name="Item_Details_Inventory_ID">
-					</div>
+				<div id="Transaction_Details_Progress" style="display: none;" class="progress">
+					<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
 				</div>
-				<div class="form-row">
-					<button type="submit" class="btn btn-primary">Update</button>
-				</div>
-				</form>
 
-				<hr>
-				<h2>History</h2>
-				<div class="table-responsive">
-					<table id="table_item_history" class="table table-sm table-bordered table-hover">
-						<thead class="thead-light">
-							<tr>
-								<th>Quantity</th>
-								<th>Date Updated</th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
+				<div id="Transaction_Details_Body" style="display: none;">
+					<h5 id="Transaction_Table_Number"></h5>
+					<h5 id="Transaction_Date"></h5>
+					<hr>
+					<h4>Orders</h4>
+					<div class="table-responsive">
+						<table id="table_orders" class="table table-sm table-bordered table-hover">
+							<thead class="thead-light">
+								<tr>
+									<th>Name</th>
+									<th>Quantity</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+					<div id="Payment_Details_Complete" style="display: none;"><button class="btn btn-success">Payment Complete</button></div>
+					<div id="Payment_Details" style="display: none;">
+						<hr>
+						<h4>Payment Details</h4>
+						<h5 id="Transaction_Payment_Type"></h5>
+						<h5 id="Transaction_Payment_Total"></h5>
+						<h5 id="Transaction_Payment_Discount"></h5>
+					</div>
 				</div>
 			</div>
 		</div>
