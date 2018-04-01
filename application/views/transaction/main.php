@@ -39,7 +39,7 @@
 						var payment_type = data[0].payment[0].payment_type == 1? 'Cash':'Card';
 						var discount = data[0].payment[0].discount == 1? 'Yes':'No';
 						$('#Transaction_Payment_Type').text("Type: "+payment_type);
-						$('#Transaction_Payment_Total').text("Total: "+data[0].payment[0].total);
+						$('#Transaction_Payment_Total').text("Grand Total: "+data[0].payment[0].total);
 						$('#Transaction_Payment_Discount').text("Discount: "+discount);
 					 }
 					 else{
@@ -64,10 +64,16 @@
  							"title": "Name",
  							"data": "name"
  						}, {
- 							"title": "Quantity",
- 							"data": "quantity"
+ 							"title": "Price",
+ 							"data": "price"
 
  						}, {
+							"title": "Quantity",
+							"data": "quantity"
+						}, {
+							"title": "Total",
+							"data": "total"
+						}, {
  							"title": "Status",
  							"data": "order_status"
 
@@ -166,8 +172,8 @@
 				</div>
 
 				<div id="Transaction_Details_Body" style="display: none;">
-					<h5 id="Transaction_Table_Number"></h5>
-					<h5 id="Transaction_Date"></h5>
+					<p id="Transaction_Table_Number"></p>
+					<p id="Transaction_Date"></p>
 					<hr>
 					<h4>Orders</h4>
 					<div class="table-responsive">
@@ -175,21 +181,23 @@
 							<thead class="thead-light">
 								<tr>
 									<th>Name</th>
+									<th>Price</th>
 									<th>Quantity</th>
+									<th>Total</th>
 									<th>Status</th>
 								</tr>
 							</thead>
 							<tbody>
 							</tbody>
 						</table>
+						<p id="Transaction_Payment_Total" class="pull-right" style="padding-right:25%; font-weight: bold;></p>
 					</div>
 					<div id="Payment_Details_Complete" style="display: none;"><button class="btn btn-success">Payment Complete</button></div>
 					<div id="Payment_Details" style="display: none;">
 						<hr>
 						<h4>Payment Details</h4>
-						<h5 id="Transaction_Payment_Type"></h5>
-						<h5 id="Transaction_Payment_Total"></h5>
-						<h5 id="Transaction_Payment_Discount"></h5>
+						<p id="Transaction_Payment_Type"></p>
+						<p id="Transaction_Payment_Discount"></p>
 					</div>
 				</div>
 			</div>

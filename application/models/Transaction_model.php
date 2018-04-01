@@ -15,7 +15,7 @@ class Transaction_model extends CI_Model{
 				if($payment->num_rows() > 0){
 						$data[$key1]->payment = $payment->result();
 				}
-				$this->db->select('*');
+				$this->db->select('*, (product.price*transaction_details.quantity) AS total');
 				$this->db->from('transaction_details');
 				$this->db->join('product', 'product.product_id = transaction_details.product_id');
 				$this->db->where('trans_id', $row1->trans_id);
