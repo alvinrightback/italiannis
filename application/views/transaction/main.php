@@ -2,12 +2,11 @@
 	
 	function getTransactionDetails(id){
 		$('#table_orders').DataTable().destroy();
-		$('#Transaction_Details').css('display', 'block');
-		$('#Transaction_Details_Progress').css('display', 'block');
-		$('#Transaction_Details_Body').css('display', 'none');
-		$('#Payment_Details_Complete').css('display', 'none');
+		$('#Transaction_Details, #Transaction_Details_Progress').css('display', 'block');
+		$('#Transaction_Details_Body, #Payment_Details_Complete, #Transaction_Details_Status, #Transaction_Payment_Total, #Transaction_Edit_Orders').css('display', 'none');
 		$('#Transaction_Details_Status').removeAttr( "class");
-		$('#Transaction_Details_Status').css('display', 'none');
+		$('#Edit_Order_Btn').prop('href','');
+		$('#Edit_Order_ID').text('');
 		$.ajax({
 			'url' : '<?php  echo base_url('transaction/get_transaction_details/'); ?>',
 			'type' : 'POST', 
@@ -17,6 +16,7 @@
 			'success' : function(data){ 
  					$('#Transaction_Table_Number').text('Table number: '+data[0].table_number);
  					$('#Transaction_Date').text('Date: '+data[0].date_created);
+					$('#Edit_Order_ID').text(data[0].trans_id);
 					if(data[0].status == 0){
 						$('#Transaction_Details_Status').addClass("badge badge-warning");
 						$('#Transaction_Details_Status').text("Pending");
@@ -39,18 +39,21 @@
 						var payment_type = data[0].payment[0].payment_type == 1? 'Cash':'Card';
 						var discount = data[0].payment[0].discount == 1? 'Yes':'No';
 						$('#Transaction_Payment_Type').text("Type: "+payment_type);
+						$('#Transaction_Payment_Total').css('display', 'block');
 						$('#Transaction_Payment_Total').text("Grand Total: "+data[0].payment[0].total);
 						$('#Transaction_Payment_Discount').text("Discount: "+discount);
 					 }
 					 else{
 						$('#Payment_Details').css('display', 'none');	 
 					 }
-
-					if(data[0].status == 1){
+				    if(data[0].status == 0){
+						$('#Transaction_Edit_Orders').css('display', 'block');	 
+					}
+					else if(data[0].status == 1){
 						$('#Payment_Details_Complete').css('display', 'block');	 
 					}
 					else{
-						$('#Payment_Details_Complete').css('display', 'none');	 
+						$('#Payment_Details_Complete, #Transaction_Edit_Orders').css('display', 'none');	 
 					}
 
  					var myTable = $('#table_orders').DataTable({
@@ -95,6 +98,35 @@
  			});
 	}
 
+
+	function editOrders(){
+		$('#editOrdersModal').modal('toggle');
+		$('#Edit_Orders_Body, #Edit_Orders_Footer').css('display', 'none');
+		$('#Edit_Orders_Progress').css('display', 'block');
+		$('#table_edit_orders > tbody').html('');
+		$.ajax({
+			'url' : '<?php  echo base_url('transaction/get_transaction_details/'); ?>',
+			'type' : 'POST', 
+			'data' : {'id' : $('#Edit_Order_ID').text()},
+			'dataType' : 'json',
+			'cache' : false,
+			'success' : function(data){ 
+ 					$('#Edit_Orders_Table_Number').text('Table number: '+data[0].table_number);
+					$('#Edit_Trans_Id').val($('#Edit_Order_ID').text());
+					$.each(data[0].orders, function(index, value) {
+						$('#table_edit_orders').append("<tr><td>"+value.name+"</td><td><input style='padding-top: 5%;' name='trans_details_id[]' type='hidden' value="+value.trans_details_id+"><input class='form-control form-control-sm' name='order_quantity[]' type='number' min='1' value="+value.quantity+" required></td><td><div class='form-group'><select name='order_status[]' class='form-control'><option value='Not yet served' "+(value.order_status=='Not yet served'?'selected':'')+">Not yet served</option><option value='Served' "+(value.order_status=='Served'?'selected':'')+">Served</option></select></div></td><td><div class='form-check text-center'><input name='order_delete[]' class='form-check-input' type='checkbox' value="+value.trans_details_id+"></div></td></tr>");		
+ 					 });
+					 
+ 				},
+			complete: function(){
+				$('#Edit_Orders_Progress').css('display', 'none');
+				$('#Edit_Orders_Body, #Edit_Orders_Footer').css('display', 'block');
+			}	 
+
+
+ 			});
+	}
+
 </script>
 <main class="main-content p-5" role="main">
 	<div class="row">
@@ -110,6 +142,49 @@
 		echo "<div class='alert alert-danger'>" . $failed . "</div>";
 	}
 	?>
+
+	<div class="modal fade" id="editOrdersModal" tabindex="-1" role="dialog" aria-labelledby="editOrdersModal" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Edit Orders</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div id="Edit_Orders_Progress" style="display: none;" class="progress">
+						<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+					</div>
+					<div id="Edit_Orders_Body" style="display: none;">
+					<p id="Edit_Orders_Table_Number"></p>
+						<?php echo form_open('transaction/edit_orders'); ?>
+						<input id="Edit_Trans_Id" name="Edit_Trans_Id" type="hidden" >
+						<table id="table_edit_orders" class="table table-sm table-hover">
+							<thead class="thead-light">
+								<tr>
+									<th>Name</th>
+									<th>Quantity</th>
+									<th>Status</th>
+									<th>Delete</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+				<div class="modal-footer" id="Edit_Orders_Footer" style="display: none;" >
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary">Update</button>
+				</div>
+				</form>
+		</div>
+	</div>
+</div>
+
+
 
 <div class="row">
 	<div class="col-md-6 col-lg-6 col-xl-6 mb-5">
@@ -190,9 +265,13 @@
 							<tbody>
 							</tbody>
 						</table>
-						<p id="Transaction_Payment_Total" class="pull-right" style="padding-right:25%; font-weight: bold;></p>
+						<p id="Transaction_Payment_Total" class="pull-right" style="padding-right:25%; font-weight: bold; display: none;"></p>
 					</div>
 					<div id="Payment_Details_Complete" style="display: none;"><button class="btn btn-success">Payment Complete</button></div>
+					<div id="Transaction_Edit_Orders" style="display: none;">
+						<button id="Edit_Order_Btn" onclick="javascript: editOrders();" class="btn btn-primary">Edit Orders</button>
+						<p id="Edit_Order_ID" style="display: none"></p>
+					</div>
 					<div id="Payment_Details" style="display: none;">
 						<hr>
 						<h4>Payment Details</h4>

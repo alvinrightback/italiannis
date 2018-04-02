@@ -34,4 +34,33 @@ class Transaction_model extends CI_Model{
 	}
 
 
+	public function edit_orders(){
+		$this->db->trans_start();
+		foreach($this->input->post('trans_details_id', TRUE) as $key=>$row){
+			$data = array('quantity'=>$this->input->post('order_quantity', TRUE)[$key],
+						  'order_status' =>$this->input->post('order_status', TRUE)[$key]
+			);
+			if($this->input->post('order_delete')){
+				if(in_array($row, $this->input->post('order_delete'))){
+					//Delete record
+					$this->db->delete('transaction_details', array('trans_details_id' => $row)); 
+				}
+				else{
+					//Update record
+					$this->db->update('transaction_details', $data, array('trans_details_id' => $row));
+				}
+			}
+			else{
+				//Update record
+				$this->db->update('transaction_details', $data, array('trans_details_id' => $row));
+			}
+		
+		}
+		$query = $this->db->trans_complete();
+		if($query){
+			return TRUE;
+		}
+	}
+
+
 }
