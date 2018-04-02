@@ -2,7 +2,8 @@
 	
 	function getItemDetails(id){
 		$('#table_item_history').DataTable().destroy();
-		$('#Item_Details').css('display', 'block');
+		$('#Item_Details, #Item_Details_Progress').css('display', 'block');
+		$('#Item_Details_Body').css('display', 'none');
 		$.ajax({
 			'url' : '<?php  echo base_url('inventory/get_item_details/'); ?>',
 			'type' : 'POST', 
@@ -36,7 +37,11 @@
  						myTable.row.add(value);
  					});
  					myTable.draw();
- 				}
+ 				},
+			'complete' : function(){
+				$('#Item_Details_Progress').css('display', 'none');
+				$('#Item_Details_Body').css('display', 'block');
+			}
  			});
 	}
 
@@ -132,36 +137,43 @@
 				Edit Item
 			</div>
 			<div class="card-body">
-				<?php echo form_open('inventory/edit_now'); ?>
-				<div class="form-row">
-					<div class="col-md-9 mb-3">
-						<label>Item Name</label>
-						<input id="Item_Name" type="text" class="form-control" name="Item_Details_Name" required>
-					</div>
-					<div class="col-md-3 mb-3">
-						<label>Quantity</label>
-						<input id="Item_Quantity" type="number" class="form-control" name="Item_Details_Quantity" required>
-						<input id="Item_Details_Inventory_ID" type="hidden" name="Item_Details_Inventory_ID">
-					</div>
+				<div id="Item_Details_Progress" style="display: none;" class="progress">
+					<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
 				</div>
-				<div class="form-row">
-					<button type="submit" class="btn btn-primary">Update</button>
-				</div>
-				</form>
 
-				<hr>
-				<h2>History</h2>
-				<div class="table-responsive">
-					<table id="table_item_history" class="table table-sm table-bordered table-hover">
-						<thead class="thead-light">
-							<tr>
-								<th>Quantity</th>
-								<th>Date Updated</th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
+				<div id="Item_Details_Body" style="display: none;">
+					<?php echo form_open('inventory/edit_now'); ?>
+					<div class="form-row">
+						<div class="col-md-9 mb-3">
+							<label>Item Name</label>
+							<input id="Item_Name" type="text" class="form-control" name="Item_Details_Name" required>
+						</div>
+						<div class="col-md-3 mb-3">
+							<label>Quantity</label>
+							<input id="Item_Quantity" type="number" class="form-control" name="Item_Details_Quantity" required>
+							<input id="Item_Details_Inventory_ID" type="hidden" name="Item_Details_Inventory_ID">
+						</div>
+					</div>
+					<div class="form-row">
+						<button type="submit" class="btn btn-primary">Update</button>
+					</div>
+					</form>
+
+					<hr>
+					<h2>History</h2>
+					
+					<div class="table-responsive">
+						<table id="table_item_history" class="table table-sm table-bordered table-hover">
+							<thead class="thead-light">
+								<tr>
+									<th>Quantity</th>
+									<th>Date Updated</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>

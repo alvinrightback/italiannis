@@ -2,7 +2,8 @@
 	
 	function getProductDetails(id){
 		$('#table_product_ingredients').DataTable().destroy();
-		$('#Product_Details').css('display', 'block');
+		$('#Product_Details, #Product_Details_Progress').css('display', 'block');
+		$('#Product_Details_Body').css('display', 'none');
 		$.ajax({
 			'url' : '<?php  echo base_url('product/get_product_details/'); ?>',
 			'type' : 'POST', 
@@ -31,7 +32,11 @@
  						myTable.row.add(value);
  					});
  					myTable.draw();
- 				}
+ 				},
+			'complete' : function(){
+				$('#Product_Details_Progress').css('display', 'none');
+				$('#Product_Details_Body').css('display', 'block');
+			}
  			});
 	}
 
@@ -127,34 +132,38 @@
 				Edit Item
 			</div>
 			<div class="card-body">
-				<?php echo form_open('inventory/edit_product_quantity'); ?>
+				<div id="Product_Details_Progress" style="display: none;" class="progress">
+					<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+				</div>
+				<div id="Product_Details_Body" style="display: none;">
+					<?php echo form_open('inventory/edit_product_quantity'); ?>
+						<label for="inputGroupFile04">Add Quantity</label>
+						<div class="input-group mb-3">
+							<input type="text" class="form-control" name="Add_Quantity" placeholder="Enter quantity to add" aria-label="Add quantity" aria-describedby="basic-addon2" required>
+							<input id="Product_ID" type="hidden" name="product_id">
+							<input id="Product_Inventory_ID" type="hidden" name="inventory_id">
+							<div class="input-group-append">
+								<button class="btn btn-primary" type="submit">Add</button>
+							</div>
+						</div>
+					</form>
 
-				<label for="inputGroupFile04">Add Quantity</label>
-				<div class="input-group mb-3">
-					<input type="text" class="form-control" name="Add_Quantity" placeholder="Enter quantity to add" aria-label="Add quantity" aria-describedby="basic-addon2" required>
-					<input id="Product_ID" type="hidden" name="product_id">
-					<input id="Product_Inventory_ID" type="hidden" name="inventory_id">
-					<div class="input-group-append">
-						<button class="btn btn-primary" type="submit">Add</button>
+					<hr>
+					<label>Ingredients</label>
+					<div class="table-responsive">
+						<table id="table_product_ingredients" class="table table-sm table-bordered table-hover">
+							<thead class="thead-dark">
+								<tr>
+									<th>Item Name</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
 					</div>
 				</div>
-			</form>
-
-			<hr>
-			<label>Ingredients</label>
-			<div class="table-responsive">
-				<table id="table_product_ingredients" class="table table-sm table-bordered table-hover">
-					<thead class="thead-dark">
-						<tr>
-							<th>Item Name</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
+		   	</div>
 		</div>
 	</div>
-</div>
 </div>
 

@@ -1,7 +1,8 @@
 <script type="text/javascript">
 	
 	function getProductDetails(id){
-		$('#Item_Details').css('display', 'block');
+		$('#Item_Details, #Item_Details_Progress').css('display', 'block');
+		$('#Item_Details_Body, #Product_Details_Image').css('display', 'none');
 		$.ajax({
 			'url' : '<?php  echo base_url('product/get_product_details/'); ?>',
 			'type' : 'POST', 
@@ -19,6 +20,10 @@
 					ingredient+=value.name+', ';
 				});
 				$('#Product_Details_Inventory').text('Ingredients: '+ingredient.replace(/, +$/, ''));
+			},
+			'complete' : function(){
+				$('#Item_Details_Progress').css('display', 'none');
+				$('#Item_Details_Body, #Product_Details_Image').css('display', 'block');
 			}
 		});
 	}
@@ -196,13 +201,18 @@
 	</div>
 	<div id="Item_Details" style="display: none;" class="col-md-6 col-lg-6 col-xl-4 mb-5">
 		<div class="card">
-			<img id="Product_Details_Image" class="card-img-top" src="assets/img/bg-image-1.jpg" alt="Card Image">
+			<img id="Product_Details_Image" style="display: none;" class="card-img-top" src="assets/img/bg-image-1.jpg" alt="Card Image">
 			<div class="card-body">
-				<h4 id="Product_Details_Name" class="card-title">Card title</h4>
-				<p id="Product_Details_Description" class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-				<p id="Product_Details_Inventory" class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-				<a id="Product_Details_ID" class="btn btn-primary btn-sm pull-right">Edit</a>
-				<div id="Product_Details_Price" class="price-new">$275</div>
+				<div id="Item_Details_Progress" style="display: none;" class="progress">
+					<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+				</div>
+				<div id="Item_Details_Body" style="display: none;">
+					<h4 id="Product_Details_Name" class="card-title"></h4>
+					<p id="Product_Details_Description" class="card-text"></p>
+					<p id="Product_Details_Inventory" class="card-text"><small class="text-muted"></small></p>
+					<a id="Product_Details_ID" class="btn btn-primary btn-sm pull-right">Edit</a>
+					<div id="Product_Details_Price" class="price-new"></div>
+				</div>
 			</div>
 		</div>
 
