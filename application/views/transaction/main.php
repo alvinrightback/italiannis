@@ -114,7 +114,7 @@
  					$('#Edit_Orders_Table_Number').text('Table number: '+data[0].table_number);
 					$('#Edit_Trans_Id').val($('#Edit_Order_ID').text());
 					$.each(data[0].orders, function(index, value) {
-						$('#table_edit_orders').append("<tr><td>"+value.name+"</td><td><input style='padding-top: 5%;' name='trans_details_id[]' type='hidden' value="+value.trans_details_id+"><input class='form-control form-control-sm' name='order_quantity[]' type='number' min='1' value="+value.quantity+" required></td><td><div class='form-group'><select name='order_status[]' class='form-control'><option value='Not yet served' "+(value.order_status=='Not yet served'?'selected':'')+">Not yet served</option><option value='Served' "+(value.order_status=='Served'?'selected':'')+">Served</option></select></div></td><td><div class='form-check text-center'><input name='order_delete[]' onchange='javascript:changeRowBG()' class='form-check-input' type='checkbox' value="+value.trans_details_id+"></div></td></tr>");		
+						$('#table_edit_orders').append("<tr class='tr'><td>"+value.name+"</td><td><input style='padding-top: 5%;' name='trans_details_id[]' type='hidden' value="+value.trans_details_id+"><input class='form-control form-control-sm' name='order_quantity[]' type='number' min='1' value="+value.quantity+" required></td><td><div class='form-group'><select name='order_status[]' class='form-control'><option value='Not yet served' "+(value.order_status=='Not yet served'?'selected':'')+">Not yet served</option><option value='Served' "+(value.order_status=='Served'?'selected':'')+">Served</option></select></div></td><td class='td'><div class='form-check text-center'><input name='order_delete[]' onchange='javascript:changeRowBG()' class='form-check-input' type='checkbox' value="+value.trans_details_id+"></div></td></tr>");		
  					 });					 
  				},
 			complete: function(){
@@ -127,12 +127,15 @@
 	}
 
 	function changeRowBG(){
-		$("#table_edit_orders > tbody").find("tr").each(function(){
-			//console.log($(this).className);
+
+		$("#table_edit_orders input:checkbox").find("[checkbox]").each(function(){
+			console.log($(this).parent().parent().attr('class'));
 			if ($(this).prop('checked')==true){ 
+				console.log('checked');
 				$(this).addClass('table-danger');
 			}
 			else{
+				console.log('not checked');
 				$(this).removeClass('table-danger');
 			}
 		});
