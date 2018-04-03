@@ -595,6 +595,7 @@ $(document).ready(function() {
 			var clickedElement = $(chartID).closest('.card').find('.header-btn-block .data-range.dropdown .dropdown-item');
 			var triggeredEvent = 'click';
 
+			
 			if(!clickedElement.length){
 				var clickedElement = $(chartID);
 				var triggeredEvent = 'load';
@@ -602,14 +603,16 @@ $(document).ready(function() {
 
 			clickedElement.on(triggeredEvent, function(e){
 				e.preventDefault();
-
+				
 				// If default range is not set, then get the range from the clicked element
 				if(triggeredEvent != "load"){
 					var range = $(this).attr('href');
+					//console.log(triggeredEvent);
+					//console.log(range);
 				}else{
 					// B5B Documentation:
 					// Set the default range if no data/range dropdown is present
-					var range = 'year';
+					var range = 'today';
 				}
 
 				// Highlight clicked item as active

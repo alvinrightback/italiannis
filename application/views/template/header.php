@@ -13,8 +13,6 @@
     <!--STYLESHEET-->
     <!--=================================================-->
 
-    <!-- Fonts -->
-    <link href="../../../../../fonts.googleapis.com/cssc85d.css?family=Montserrat:300,400,500,700&amp;subset=latin-ext" rel="stylesheet">
 
     <!-- CSS - REQUIRED - START -->
     <!-- Batch Icons -->
@@ -33,6 +31,8 @@
     <!-- CSS - OPTIONAL - START -->
     <!-- Font Awesome -->
     <link rel="stylesheet" href="<?php echo base_url('assets/fonts/font-awesome/css/font-awesome.min.css'); ?>">
+    <!-- Vector Maps -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/plugins/jvmaps/jqvmap.min.css'); ?>">
     <!-- Toastr -->
     <link rel="stylesheet" href="<?php echo base_url('assets/plugins/toastr/toastr.min.css'); ?>">
 

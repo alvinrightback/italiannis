@@ -27,6 +27,9 @@
     <!-- Velocity -->
     <script type="text/javascript" src="<?php echo base_url('assets/plugins/velocity/velocity.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo base_url('assets/plugins/velocity/velocity.ui.min.js'); ?>"></script>
+    <!-- JQuery Visible-->
+    <script type="text/javascript" src="<?php echo base_url('assets/plugins/jquery_visible/jquery.visible.min.js'); ?>"></script>
+
     <!-- Custom Scrollbar -->
     <script type="text/javascript" src="<?php echo base_url('assets/plugins/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js '); ?>"></script>
     <!-- jQuery Visible -->
@@ -46,6 +49,10 @@
     <!-- Toastr -->
     <script type="text/javascript" src="<?php echo base_url('assets/plugins/toastr/toastr.min.js'); ?>"></script>
     <!-- SCRIPTS - OPTIONAL END -->
+    <!-- VMaps-->
+    <script type="text/javascript" src="<?php echo base_url('assets/plugins/jvmaps/jquery.vmap.min.js'); ?>"></script>
+	<script type="text/javascript" src="<?php echo base_url('assets/plugins/jvmaps/maps/jquery.vmap.usa.js'); ?>"></script>
+
 
     <!-- Toastr -->
     <script type="text/javascript" src="<?php echo base_url('assets/demo/js/ui-notifications.js'); ?>"></script>
