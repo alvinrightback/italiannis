@@ -1,20 +1,6 @@
 <main class="main-content p-5" role="main">
 					<div class="row">
-						<div class="col-md-6 col-lg-6 col-xl-3 mb-5">
-							<div class="card card-tile card-xs bg-primary bg-gradient text-center">
-								<div class="card-body p-4">
-									<!-- Accepts .invisible: Makes the items. Use this only when you want to have an animation called on it later -->
-									<div class="tile-left">
-										<i class="batch-icon batch-icon-user-alt batch-icon-xxl"></i>
-									</div>
-									<div class="tile-right">
-										<div class="tile-number">1,359</div>
-										<div class="tile-description">Customers Online</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-lg-6 col-xl-3 mb-5">
+						<div class="col-md-6 col-lg-6 col-xl-4 mb-5">
 							<div class="card card-tile card-xs bg-secondary bg-gradient text-center">
 								<div class="card-body p-4">
 									<div class="tile-left">
@@ -27,20 +13,20 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6 col-lg-6 col-xl-3 mb-5">
+						<div class="col-md-6 col-lg-6 col-xl-4 mb-5">
 							<div class="card card-tile card-xs bg-primary bg-gradient text-center">
 								<div class="card-body p-4">
 									<div class="tile-left">
 										<i class="batch-icon batch-icon-list batch-icon-xxl"></i>
 									</div>
 									<div class="tile-right">
-										<div class="tile-number">26</div>
-										<div class="tile-description">Open Tickets</div>
+										<div class="tile-number">5</div>
+										<div class="tile-description">Open Tables</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6 col-lg-6 col-xl-3 mb-5">
+						<div class="col-md-6 col-lg-6 col-xl-4 mb-5">
 							<div class="card card-tile card-xs bg-secondary bg-gradient text-center">
 								<div class="card-body p-4">
 									<div class="tile-left">
@@ -48,7 +34,7 @@
 									</div>
 									<div class="tile-right">
 										<div class="tile-number">476</div>
-										<div class="tile-description">New Orders</div>
+										<div class="tile-description">Pending Orders</div>
 									</div>
 								</div>
 							</div>
@@ -83,7 +69,7 @@
 						<div class="col-md-6 col-lg-6 col-xl-4 mb-5">
 							<div class="card card-md">
 								<div class="card-header">
-									Traffic Sources
+									Sales Overview
 									<div class="header-btn-block">
 										<span class="data-range dropdown">
 											<a href="#" class="btn btn-primary dropdown-toggle" id="navbar-dropdown-traffic-sources-header-button" data-toggle="dropdown" data-flip="false" aria-haspopup="true" aria-expanded="false">
@@ -99,7 +85,7 @@
 									</div>
 								</div>
 								<div class="card-body text-center">
-									<p class="text-left">Your top 5 traffic sources</p>
+									<p class="text-left">Your top 5 menu category</p>
 									<div class="card-chart" data-chart-color-1="#07a7e3" data-chart-color-2="#32dac3" data-chart-color-3="#4f5b60" data-chart-color-4="#FCCF31" data-chart-color-5="#f43a59">
 										<canvas id="traffic-source"></canvas>
 									</div>
