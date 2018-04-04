@@ -11,7 +11,8 @@ class Transaction_model extends CI_Model{
 		if($query->num_rows() >0){
 			foreach($query->result() as $key1=>$row1){
 				$data[] = $row1;
-				$payment = $this->db->get_where('transaction_payment', array('trans_id', $this->input->post('id')));
+				$payment = $this->db->get_where('transaction_payment', array('trans_id' => $this->input->post('id')));
+
 				if($payment->num_rows() > 0){
 						$data[$key1]->payment = $payment->result();
 				}

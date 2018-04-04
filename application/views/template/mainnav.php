@@ -30,6 +30,16 @@
 									Product
 								</a>
 							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" data-toggle="dropdown" data-flip="false" aria-haspopup="true" aria-expanded="false">
+									<i class="batch-icon batch-icon-database"></i>
+									Forecasting and Analytics
+								</a>
+								<ul class="dropdown-menu" aria-labelledby="navbar-dropdown-ecommerce-link">
+									<li><a class="dropdown-item" href="<?php echo base_url('forecasting') ?>">Overall Sales</a></li>
+									<li><a class="dropdown-item" href="<?php echo base_url('forecasting/product_forecast') ?>">Product Sales</a></li>
+								</ul>
+							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="<?php echo base_url('display') ?>">
 									<i class="batch-icon batch-icon-clipboard-alt"></i>

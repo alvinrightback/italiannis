@@ -573,6 +573,639 @@ $(document).ready(function() {
 		return chartSizes;
 	}
 
+		/**
+	 * @chartID					{string}
+	 * @maxHeight 				{int}(optional)
+	 */
+	function qp_overall_sales_line_chart(chartID, maxHeight){
+		if($(chartID).length){
+			var chartSizes = qp_chart_sizes(chartID);
+			var chartWidth = chartSizes[0];
+			var chartHeight = chartSizes[1];
+
+			if(typeof(maxHeight) === 'undefined'){
+				maxHeight = chartHeight;
+			}
+			if(maxHeight != chartHeight){
+				chartHeight = maxHeight;
+			}
+
+			// If there is a date/range dropdown, then enable a click event
+			// If not, use another trigger
+			var clickedElement = $(chartID).closest('.card').find('.header-btn-block .data-range.dropdown .dropdown-item');
+			var triggeredEvent = 'click';
+
+			
+			if(!clickedElement.length){
+				var clickedElement = $(chartID);
+				var triggeredEvent = 'load';
+			}
+
+			clickedElement.on(triggeredEvent, function(e){
+				e.preventDefault();
+				
+				// If default range is not set, then get the range from the clicked element
+				if(triggeredEvent != "load"){
+					var range = $(this).attr('href');
+				}else{
+					// B5B Documentation:
+					// Set the default range if no data/range dropdown is present
+					var range = 'today';
+				}
+
+				// Highlight clicked item as active
+				$(this).siblings().removeClass('active');
+				$(this).addClass('active');
+				/* DEMO DATA - START */
+				switch(range.split('/')[6]){
+					
+					case '2016':
+					get_yearly_sales(range);					
+					break;
+
+					case '2017':
+					get_yearly_sales(range);					
+					break;
+					
+					default:
+					case '2018':
+					get_yearly_sales(range)
+					break;
+				}
+				/* DEMO DATA - END */
+			});
+
+			if(triggeredEvent == 'load'){
+				clickedElement.trigger(triggeredEvent);
+			}else{
+				$(chartID).closest('.card').find('.header-btn-block .data-range.dropdown .dropdown-item.active').trigger(triggeredEvent);
+			}
+
+
+			function get_yearly_sales(urlFromDropdown){
+				$.ajax({
+					"url" : urlFromDropdown,
+					'type' : 'POST', 
+					'data' : {'year' : urlFromDropdown.split('/')[6]},
+					'dataType' : 'json',
+					'cache' : false,
+					'success' : function(data){
+						var dataSet = [];
+						$.each(data, function(index, value){
+							dataSet[value.month-1] = value.total;
+						});
+
+						for (var i = 0; i < 12; i++) { 
+							if(dataSet[i] == null){
+								dataSet[i] = 0;
+							}
+						}
+						var xAxisLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+						load_chart(urlFromDropdown.split('/')[6], xAxisLabels, dataSet);
+					}
+				});
+			}
+
+
+			function load_chart(range, xAxisLabels, dataSet1, dataSet2){
+				var canvasParent = $(chartID).closest('.card-chart');
+				var color1 = canvasParent.data('chart-color-1');
+				//var color2 = canvasParent.data('chart-color-2');
+
+				var legendLine1 = canvasParent.data('chart-legend-1');
+				//var legendLine2 = canvasParent.data('chart-legend-2');
+
+				// B5B Documentation:
+				// Use these settings if it's called from a '.card-sm'
+				// Add more card classes as you wish
+				if(canvasParent.closest('.card').hasClass('card-sm')){
+					color1 = qp_hexToRgbA(color1, 0.7);
+					//color2 = qp_hexToRgbA(color2, 0.7);
+					var borderWidth = 0;
+					var pointRadius = 0;
+					var fillLineArea = true;
+					var displayLegend = false;
+					var hoverInterset = false;
+					var xAxisLabelShow = false;
+					var yAxisLabelShow = false;
+
+					chartHeight = 82;
+					canvasParent.closest('.card-body').css({'padding-left' : '0', 'padding-right' : '0'});
+
+					if(!canvasParent.closest('.card-body').next().length && !canvasParent.next().length){
+						canvasParent.closest('.card-body').css({'padding-bottom' : '0', 'position' : 'relative'});
+						canvasParent.css({'position' : 'absolute', 'bottom' : '0'});
+						chartWidth = canvasParent.closest('.card-body').width();
+					}
+				}else{
+					var borderWidth = 2;
+					var pointRadius = 2;
+					var fillLineArea = false;
+					var displayLegend = true;
+					var hoverInterset = true;
+					var xAxisLabelShow = true;
+					var yAxisLabelShow = true;
+				}
+
+				// First remove old chart, then create new one
+				canvasParent.empty();
+
+				$('<canvas>').attr({
+					id: chartID.substring(1)
+				}).css({
+					width: chartWidth + 'px',
+					height: chartHeight + 'px'
+				}).appendTo(canvasParent);
+
+				var ctx = $(chartID);
+
+				var myChart = new Chart(ctx, {
+					type: 'line',
+					data: {
+						labels: xAxisLabels,
+						datasets: [{
+							label: legendLine1,
+							backgroundColor: color1,
+							borderColor: color1,
+							borderWidth: borderWidth,
+							pointRadius: pointRadius,
+							data: dataSet1,
+							fill: fillLineArea
+						}
+						// , {
+						// 	label: legendLine2,
+						// 	backgroundColor: color2,
+						// 	borderColor: color2,
+						// 	borderWidth: borderWidth,
+						// 	pointRadius: pointRadius,
+						// 	data:  dataSet2,
+						// 	fill: fillLineArea
+						// }
+					]
+					},
+					options: {
+						responsive: false,
+						title:{
+							display: false
+						},
+						tooltips: {
+							mode: 'index',
+							intersect: false,
+						},
+						hover: {
+							mode: 'nearest',
+							intersect: hoverInterset
+						},
+						legend: {
+							display: displayLegend
+						},
+						scales: {
+							xAxes: [{
+								display: xAxisLabelShow,
+								scaleLabel: {
+									display: true,
+									labelString: 'Timeframe (' + range + ')'
+								}
+							}],
+							yAxes: [{
+								display: yAxisLabelShow,
+								scaleLabel: {
+									display: true,
+									labelString: 'Value'
+								}
+							}]
+						}
+					}
+				});
+			}
+		}
+	}
+
+		/**
+	 * @chartID					{string}
+	 * @maxHeight 				{int}(optional)
+	 */
+	function qp_overall_sales_forecast_line_chart(chartID, maxHeight){
+		if($(chartID).length){
+			var chartSizes = qp_chart_sizes(chartID);
+			var chartWidth = chartSizes[0];
+			var chartHeight = chartSizes[1];
+
+			if(typeof(maxHeight) === 'undefined'){
+				maxHeight = chartHeight;
+			}
+			if(maxHeight != chartHeight){
+				chartHeight = maxHeight;
+			}
+
+			// If there is a date/range dropdown, then enable a click event
+			// If not, use another trigger
+			var clickedElement = $(chartID).closest('.card').find('.header-btn-block .data-range.dropdown .dropdown-item');
+			var triggeredEvent = 'click';
+
+			
+			if(!clickedElement.length){
+				var clickedElement = $(chartID);
+				var triggeredEvent = 'load';
+			}
+
+			clickedElement.on(triggeredEvent, function(e){
+				e.preventDefault();
+				
+				// If default range is not set, then get the range from the clicked element
+				if(triggeredEvent != "load"){
+					var range = $(this).attr('href');
+				}else{
+					// B5B Documentation:
+					// Set the default range if no data/range dropdown is present
+					var range = 'today';
+				}
+
+				// Highlight clicked item as active
+				$(this).siblings().removeClass('active');
+				$(this).addClass('active');
+
+				/* DEMO DATA - START */
+				switch(range.split('/')[6]){
+					
+					case '2016':
+					get_yearly_sales(range);					
+					break;
+
+					case '2017':
+					get_yearly_sales(range);					
+					break;
+					
+					default:
+					case '2018':
+					get_yearly_sales(range)
+					break;
+				}
+				/* DEMO DATA - END */
+			});
+
+			if(triggeredEvent == 'load'){
+				clickedElement.trigger(triggeredEvent);
+			}else{
+				$(chartID).closest('.card').find('.header-btn-block .data-range.dropdown .dropdown-item.active').trigger(triggeredEvent);
+			}
+
+
+			function get_yearly_sales(urlFromDropdown){
+				$.ajax({
+					"url" : urlFromDropdown,
+					'type' : 'POST', 
+					'data' : {'year' : urlFromDropdown.split('/')[6]},
+					'dataType' : 'json',
+					'cache' : false,
+					'success' : function(data){
+						// var dataSet = [];
+						// $.each(data, function(index, value){
+						// 	dataSet[value.month-1] = value.total;
+						// });
+
+						// for (var i = 0; i < 12; i++) { 
+						// 	if(dataSet[i] == null){
+						// 		dataSet[i] = 0;
+						// 	}
+						// }
+						var xAxisLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+						load_chart(urlFromDropdown.split('/')[6], xAxisLabels, data);
+					}
+				});
+			}
+
+
+			function load_chart(range, xAxisLabels, dataSet1, dataSet2){
+				var canvasParent = $(chartID).closest('.card-chart');
+				var color1 = canvasParent.data('chart-color-1');
+				//var color2 = canvasParent.data('chart-color-2');
+
+				var legendLine1 = canvasParent.data('chart-legend-1');
+				//var legendLine2 = canvasParent.data('chart-legend-2');
+
+				// B5B Documentation:
+				// Use these settings if it's called from a '.card-sm'
+				// Add more card classes as you wish
+				if(canvasParent.closest('.card').hasClass('card-sm')){
+					color1 = qp_hexToRgbA(color1, 0.7);
+					//color2 = qp_hexToRgbA(color2, 0.7);
+					var borderWidth = 0;
+					var pointRadius = 0;
+					var fillLineArea = true;
+					var displayLegend = false;
+					var hoverInterset = false;
+					var xAxisLabelShow = false;
+					var yAxisLabelShow = false;
+
+					chartHeight = 82;
+					canvasParent.closest('.card-body').css({'padding-left' : '0', 'padding-right' : '0'});
+
+					if(!canvasParent.closest('.card-body').next().length && !canvasParent.next().length){
+						canvasParent.closest('.card-body').css({'padding-bottom' : '0', 'position' : 'relative'});
+						canvasParent.css({'position' : 'absolute', 'bottom' : '0'});
+						chartWidth = canvasParent.closest('.card-body').width();
+					}
+				}else{
+					var borderWidth = 2;
+					var pointRadius = 2;
+					var fillLineArea = false;
+					var displayLegend = true;
+					var hoverInterset = true;
+					var xAxisLabelShow = true;
+					var yAxisLabelShow = true;
+				}
+
+				// First remove old chart, then create new one
+				canvasParent.empty();
+
+				$('<canvas>').attr({
+					id: chartID.substring(1)
+				}).css({
+					width: chartWidth + 'px',
+					height: chartHeight + 'px'
+				}).appendTo(canvasParent);
+
+				var ctx = $(chartID);
+
+				var myChart = new Chart(ctx, {
+					type: 'line',
+					data: {
+						labels: xAxisLabels,
+						datasets: [{
+							label: legendLine1,
+							backgroundColor: color1,
+							borderColor: color1,
+							borderWidth: borderWidth,
+							pointRadius: pointRadius,
+							data: dataSet1,
+							fill: fillLineArea
+						}
+						// , {
+						// 	label: legendLine2,
+						// 	backgroundColor: color2,
+						// 	borderColor: color2,
+						// 	borderWidth: borderWidth,
+						// 	pointRadius: pointRadius,
+						// 	data:  dataSet2,
+						// 	fill: fillLineArea
+						// }
+					]
+					},
+					options: {
+						responsive: false,
+						title:{
+							display: false
+						},
+						tooltips: {
+							mode: 'index',
+							intersect: false,
+						},
+						hover: {
+							mode: 'nearest',
+							intersect: hoverInterset
+						},
+						legend: {
+							display: displayLegend
+						},
+						scales: {
+							xAxes: [{
+								display: xAxisLabelShow,
+								scaleLabel: {
+									display: true,
+									labelString: 'Timeframe (' + range + ')'
+								}
+							}],
+							yAxes: [{
+								display: yAxisLabelShow,
+								scaleLabel: {
+									display: true,
+									labelString: 'Value'
+								}
+							}]
+						}
+					}
+				});
+			}
+		}
+	}
+
+	/**
+	 * @chartID					{string}
+	 * @maxHeight 				{int}(optional)
+	 */
+	function qp_product_forecast_line_chart(chartID, maxHeight){
+		if($(chartID).length){
+			var chartSizes = qp_chart_sizes(chartID);
+			var chartWidth = chartSizes[0];
+			var chartHeight = chartSizes[1];
+
+			if(typeof(maxHeight) === 'undefined'){
+				maxHeight = chartHeight;
+			}
+			if(maxHeight != chartHeight){
+				chartHeight = maxHeight;
+			}
+
+			// If there is a date/range dropdown, then enable a click event
+			// If not, use another trigger
+			var clickedElement = $(chartID).closest('.card').find('.header-btn-block .data-range.dropdown .dropdown-item');
+			var triggeredEvent = 'click';
+
+			
+			if(!clickedElement.length){
+				var clickedElement = $(chartID);
+				var triggeredEvent = 'load';
+			}
+
+			clickedElement.on(triggeredEvent, function(e){
+				e.preventDefault();
+				
+				// If default range is not set, then get the range from the clicked element
+				if(triggeredEvent != "load"){
+					var range = $(this).attr('href');
+					//console.log(triggeredEvent);
+					//console.log(range);
+				}else{
+					// B5B Documentation:
+					// Set the default range if no data/range dropdown is present
+					var range = 'today';
+				}
+
+				// Highlight clicked item as active
+				$(this).siblings().removeClass('active');
+				$(this).addClass('active');
+
+				/* DEMO DATA - START */
+				switch(range){
+					case 'today':
+					// B5B Documentation:
+					// Use Ajax to pull your own data from the database
+					var xAxisLabels = ["1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM", "12AM"];
+					var dataSet1 = [0, 0, 0, 0, 0, 0, 0, 0, 3, 9, 7, 9, 5, 0, 5, 3, 9, 7, 9, 5, 0, 5, 7, 2];
+					var dataSet2 = [0, 0, 3, 5, 0, 2, 7, 0, 9, 5, 0, 5, 3, 0, 2, 7, 0, 9, 5, 0, 5, 0, 5, 3];
+
+					// Load the chart after all the data has been set
+					break;
+					load_chart(range, xAxisLabels, dataSet1, dataSet2);
+					
+					case 'week':
+					// B5B Documentation:
+					// Use Ajax to pull your own data from the database
+					var xAxisLabels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+					var dataSet1 = [40, 38, 97, 19, 85, 90, 50];
+					var dataSet2 = [30, 45, 20, 52, 70, 20, 90];
+
+					// Load the chart after all the data has been set
+					load_chart(range, xAxisLabels, dataSet1, dataSet2);
+					break;
+
+					case 'month':
+					// B5B Documentation:
+					// Use Ajax to pull your own data from the database
+					var xAxisLabels = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"];
+					var dataSet1 = [2, 1, 3, 3, 4, 0, 0, 0, 6, 4, 3, 0, 0, 0, 0, 1, 8, 5, 1, 2, 4, 0, 0, 0, 3, 5, 0, 0, 0, 0, 0];
+					var dataSet2 = [3, 4, 2, 2, 7, 0, 0, 0, 5, 2, 1, 3, 3, 4, 0, 0, 0, 6, 9, 2, 0, 0, 5, 2, 5, 7, 2, 9, 3, 3, 7];
+
+					// Load the chart after all the data has been set
+					load_chart(range, xAxisLabels, dataSet1, dataSet2);
+					break;
+					
+					default:
+					case 'year':
+					// B5B Documentation:
+					// Use Ajax to pull your own data from the database
+					var xAxisLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+					var dataSet1 = [2025, 1460, 1492, 1794, 1384, 2122, 2880, 2545, 3908, 4935, 3907, 4937];
+					//var dataSet2 = [821, 730, 622, 897, 923, 1200, 1402, 1212, 1534, 2100, 1503, 1899];
+
+					// Load the chart after all the data has been set
+					load_chart(range, xAxisLabels, dataSet1, dataSet2);
+					break;
+				}
+				/* DEMO DATA - END */
+			});
+
+			if(triggeredEvent == 'load'){
+				clickedElement.trigger(triggeredEvent);
+			}else{
+				$(chartID).closest('.card').find('.header-btn-block .data-range.dropdown .dropdown-item.active').trigger(triggeredEvent);
+			}
+
+			function load_chart(range, xAxisLabels, dataSet1, dataSet2){
+				var canvasParent = $(chartID).closest('.card-chart');
+				var color1 = canvasParent.data('chart-color-1');
+				//var color2 = canvasParent.data('chart-color-2');
+
+				var legendLine1 = canvasParent.data('chart-legend-1');
+				//var legendLine2 = canvasParent.data('chart-legend-2');
+
+				// B5B Documentation:
+				// Use these settings if it's called from a '.card-sm'
+				// Add more card classes as you wish
+				if(canvasParent.closest('.card').hasClass('card-sm')){
+					color1 = qp_hexToRgbA(color1, 0.7);
+					//color2 = qp_hexToRgbA(color2, 0.7);
+					var borderWidth = 0;
+					var pointRadius = 0;
+					var fillLineArea = true;
+					var displayLegend = false;
+					var hoverInterset = false;
+					var xAxisLabelShow = false;
+					var yAxisLabelShow = false;
+
+					chartHeight = 82;
+					canvasParent.closest('.card-body').css({'padding-left' : '0', 'padding-right' : '0'});
+
+					if(!canvasParent.closest('.card-body').next().length && !canvasParent.next().length){
+						canvasParent.closest('.card-body').css({'padding-bottom' : '0', 'position' : 'relative'});
+						canvasParent.css({'position' : 'absolute', 'bottom' : '0'});
+						chartWidth = canvasParent.closest('.card-body').width();
+					}
+				}else{
+					var borderWidth = 2;
+					var pointRadius = 2;
+					var fillLineArea = false;
+					var displayLegend = true;
+					var hoverInterset = true;
+					var xAxisLabelShow = true;
+					var yAxisLabelShow = true;
+				}
+
+				// First remove old chart, then create new one
+				canvasParent.empty();
+
+				$('<canvas>').attr({
+					id: chartID.substring(1)
+				}).css({
+					width: chartWidth + 'px',
+					height: chartHeight + 'px'
+				}).appendTo(canvasParent);
+
+				var ctx = $(chartID);
+
+				var myChart = new Chart(ctx, {
+					type: 'line',
+					data: {
+						labels: xAxisLabels,
+						datasets: [{
+							label: legendLine1,
+							backgroundColor: color1,
+							borderColor: color1,
+							borderWidth: borderWidth,
+							pointRadius: pointRadius,
+							data: dataSet1,
+							fill: fillLineArea
+						}
+						// , {
+						// 	label: legendLine2,
+						// 	backgroundColor: color2,
+						// 	borderColor: color2,
+						// 	borderWidth: borderWidth,
+						// 	pointRadius: pointRadius,
+						// 	data:  dataSet2,
+						// 	fill: fillLineArea
+						// }
+					]
+					},
+					options: {
+						responsive: false,
+						title:{
+							display: false
+						},
+						tooltips: {
+							mode: 'index',
+							intersect: false,
+						},
+						hover: {
+							mode: 'nearest',
+							intersect: hoverInterset
+						},
+						legend: {
+							display: displayLegend
+						},
+						scales: {
+							xAxes: [{
+								display: xAxisLabelShow,
+								scaleLabel: {
+									display: true,
+									labelString: 'Timeframe (' + range + ')'
+								}
+							}],
+							yAxes: [{
+								display: yAxisLabelShow,
+								scaleLabel: {
+									display: true,
+									labelString: 'Value'
+								}
+							}]
+						}
+					}
+				});
+			}
+		}
+	}
+
 	/**
 	 * @chartID					{string}
 	 * @maxHeight 				{int}(optional)
@@ -678,17 +1311,17 @@ $(document).ready(function() {
 			function load_chart(range, xAxisLabels, dataSet1, dataSet2){
 				var canvasParent = $(chartID).closest('.card-chart');
 				var color1 = canvasParent.data('chart-color-1');
-				var color2 = canvasParent.data('chart-color-2');
+				//var color2 = canvasParent.data('chart-color-2');
 
 				var legendLine1 = canvasParent.data('chart-legend-1');
-				var legendLine2 = canvasParent.data('chart-legend-2');
+				//var legendLine2 = canvasParent.data('chart-legend-2');
 
 				// B5B Documentation:
 				// Use these settings if it's called from a '.card-sm'
 				// Add more card classes as you wish
 				if(canvasParent.closest('.card').hasClass('card-sm')){
 					color1 = qp_hexToRgbA(color1, 0.7);
-					color2 = qp_hexToRgbA(color2, 0.7);
+					//color2 = qp_hexToRgbA(color2, 0.7);
 					var borderWidth = 0;
 					var pointRadius = 0;
 					var fillLineArea = true;
@@ -739,15 +1372,17 @@ $(document).ready(function() {
 							pointRadius: pointRadius,
 							data: dataSet1,
 							fill: fillLineArea
-						}, {
-							label: legendLine2,
-							backgroundColor: color2,
-							borderColor: color2,
-							borderWidth: borderWidth,
-							pointRadius: pointRadius,
-							data:  dataSet2,
-							fill: fillLineArea
-						}]
+						}
+						// , {
+						// 	label: legendLine2,
+						// 	backgroundColor: color2,
+						// 	borderColor: color2,
+						// 	borderWidth: borderWidth,
+						// 	pointRadius: pointRadius,
+						// 	data:  dataSet2,
+						// 	fill: fillLineArea
+						// }
+					]
 					},
 					options: {
 						responsive: false,
@@ -2561,6 +3196,9 @@ $(document).ready(function() {
 	 * Do not copy the content below when you are building your site.
 	 */
 	qp_line_chart('#sales-overview');
+	qp_product_forecast_line_chart('#product-sales-overview');
+	qp_overall_sales_line_chart('#overall-sales-overview');
+	qp_overall_sales_forecast_line_chart('#overall-sales-forecast');
 	qp_doughnut_pie_chart('#traffic-source');
 
 	qp_map_chart('#customer-location');
@@ -2613,7 +3251,12 @@ $(document).ready(function() {
 		waitForFinalEvent(function(){
 			// functions here...
 			qp_line_chart('#sales-overview');
+			qp_product_forecast_line_chart('#product-sales-overview');
+			qp_overall_sales_line_chart('#overall-sales-overview');
+			qp_overall_sales_forecast_line_chart('#overall-sales-forecast');
 			qp_line_chart('#database-load');
+
+
 
 			qp_bar_chart('#profit-loss');
 

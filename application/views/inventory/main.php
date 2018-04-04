@@ -74,7 +74,7 @@
 					<?php echo form_open('inventory/add_now'); ?>
 					<div class="form-group">
 						<label for="exampleFormControlInput1">Item Name</label>
-						<input type="text" class="form-control" id="itemName" name="Item_Name" placeholder="e.g. garlic, tomatoes, beans etc. " required>
+						<input type="text" class="form-control" id="itemName" name="Item_Name" placeholder="e.g. garlic, tomatoes, beans etc. " required autofocus>
 					</div>
 					<div class="form-group">
 						<label for="exampleFormControlInput1">Quantity</label>

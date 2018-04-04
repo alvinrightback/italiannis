@@ -60,7 +60,7 @@
 									</div>
 								</div>
 								<div class="card-body">
-									<div class="card-chart" data-chart-color-1="#07a7e3" data-chart-color-2="#32dac3" data-chart-legend-1="Sales ($)" data-chart-legend-2="Orders">
+									<div class="card-chart" data-chart-color-1="#07a7e3" data-chart-legend-1="Sales">
 										<canvas id="sales-overview"></canvas>
 									</div>
 								</div>
