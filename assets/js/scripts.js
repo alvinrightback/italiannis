@@ -859,16 +859,6 @@ $(document).ready(function() {
 					'dataType' : 'json',
 					'cache' : false,
 					'success' : function(data){
-						// var dataSet = [];
-						// $.each(data, function(index, value){
-						// 	dataSet[value.month-1] = value.total;
-						// });
-
-						// for (var i = 0; i < 12; i++) { 
-						// 	if(dataSet[i] == null){
-						// 		dataSet[i] = 0;
-						// 	}
-						// }
 						var xAxisLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 						load_chart(urlFromDropdown.split('/')[6], xAxisLabels, data);
 					}
