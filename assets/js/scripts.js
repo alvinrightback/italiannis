@@ -363,11 +363,9 @@ $(document).ready(function() {
 		// var windowWidth = $(window).width();
 
 		// $('.dropdown-toggle').on('click', function(){
-		// 	console.log($(window).width());
 		// 	if($(window).width() <= 576){
 		// 		$(this).siblings('.dropdown-menu').each(function(){
 		// 			if(!$(this).hasClass('dropdown-menu-fullscreen')){
-		// 				console.log($(this));
 		// 				$(this).removeAttr('style');
 		// 				$(this).css({'position' : 'absolute', 'width' : windowWidth + 'px'});
 		// 				$(this).closest('.dropdown').css({'position' : 'static'});
@@ -1285,24 +1283,9 @@ $(document).ready(function() {
 						'cache' : false,
 						'success' : function(data){
 							console.log(data);
-							if(data == null){
-								var dataSet = [0,0,0,0,0,0,0,0,0,0,0,0];
-							}
-							else{
-								var dataSet = [];
-								$.each(data, function(index, value){
-									dataSet[value.month-1] = value.total;
-								});
-		
-								for (var i = 0; i < 12; i++) { 
-									if(dataSet[i] == null){
-										dataSet[i] = 0;
-									}
-								}
-							}
 							
 							var xAxisLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-							load_chart('2018', xAxisLabels, dataSet);
+							load_chart('2018', xAxisLabels, data);
 						}
 					});
 				}	
@@ -1458,8 +1441,6 @@ $(document).ready(function() {
 				// If default range is not set, then get the range from the clicked element
 				if(triggeredEvent != "load"){
 					var range = $(this).attr('href');
-					//console.log(triggeredEvent);
-					//console.log(range);
 				}else{
 					// B5B Documentation:
 					// Set the default range if no data/range dropdown is present
@@ -2391,7 +2372,6 @@ $(document).ready(function() {
 
 			/* Update the preview text */
 			$('#input-new-event').on('keyup input', function(){
-				// console.log($('#input-new-event').val());
 				$('#preview-event-name').text($('#input-new-event').val());
 			});
 
