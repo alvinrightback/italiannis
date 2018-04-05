@@ -58,6 +58,7 @@ class Product_model extends CI_Model{
 		else{
 			$image_data = $this->upload->data();
 
+			
 			$config = array(
 				'source_image' => $image_data['full_path'],
 				'new_image' => './resources/images/product_photo/',
@@ -78,8 +79,8 @@ class Product_model extends CI_Model{
 				}
 				else if($type == 'edit'){
 					$query = $this->edit($image_data['raw_name'], $image_data['full_path']);
-					$currentImage = $file = './resources/images/product_photo/'.$this->input->post('image_name').'.jpeg';
-					unlink($currentImage);
+					$file = './resources/images/product_photo/'.$this->input->post('image_name').'.jpeg';
+					unlink($file);
 				}
 				
 				if($query){

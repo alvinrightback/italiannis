@@ -38,7 +38,7 @@ class Forecasting_model extends CI_Model{
                 if(empty($data2016[$i])){
                   $data2016[$i] = 0;
                 }
-            }   
+            }  
         }
 
         $this->db->select('MONTH(date_created) as month, SUM(transaction_payment.total) AS total');
