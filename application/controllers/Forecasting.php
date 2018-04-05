@@ -34,4 +34,12 @@ class Forecasting extends MY_Controller {
 	public function get_yearly_sales_forecast(){
 		echo json_encode($this->forecasting_model->get_yearly_sales_forecast());
 	}
+
+	public function get_product_yearly_sales(){
+		echo json_encode($this->forecasting_model->get_product_yearly_sales());
+	}
+
+	public function get_product_yearly_sales_forecast(){
+		echo json_encode($this->forecasting_model->get_product_yearly_sales_forecast());
+	}
 }
