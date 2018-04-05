@@ -80,7 +80,7 @@ class Inventory extends MY_Controller {
 		$data['title'] = "Inventory";
 		$data['success'] = $this->session->flashdata('success');
 		$data['failed'] = $this->session->flashdata('failed');
-		$data['saleable'] = $this->inventory_model->get_saleable('product', 'date_created', 'desc');
+		$data['saleable'] = $this->inventory_model->get_saleable();
 
 
 		for ($i=0; $i < count($data['saleable']) ; $i++) { 

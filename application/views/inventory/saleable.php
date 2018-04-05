@@ -18,12 +18,15 @@
  						"paging": true,
  						"lengthChange": false,
  						"searching": true,
- 						"ordering": true,
+ 						"ordering": false,
  						"info": true,
  						"autoWidth": true,
  						"columns": [{
  							"title": "Item Name",
  							"data": "name"
+ 						},{
+ 							"title": "Quantity",
+ 							"data": "quantity"
  						}]
  					});
 
@@ -155,6 +158,7 @@
 							<thead class="thead-dark">
 								<tr>
 									<th>Item Name</th>
+									<th>Quantity</th>
 								</tr>
 							</thead>
 							<tbody>

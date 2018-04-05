@@ -35,6 +35,7 @@ class Product_model extends CI_Model{
 		$this->db->select('inventory.*');
 		$this->db->from('inventory');
 		$this->db->where_in('inventory_id', explode(",", $inventory_id));
+		$this->db->order_by('quantity', 'asc');
 		$query = $this->db->get();
 		if($query->num_rows() >0){
 			foreach($query->result() as $row){

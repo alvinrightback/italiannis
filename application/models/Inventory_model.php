@@ -67,8 +67,9 @@ class Inventory_model extends CI_Model{
 
 	public function get_saleable(){
 		$this->db->select('product.product_id, product.name, product.inventory_id, product.product_category_id, product.description, product.price, product.date_created');
+		$this->db->from('product');
 		$this->db->order_by('date_created', 'desc');
-		$query = $this->db->get('product');
+		$query = $this->db->get();
 		if($query->num_rows() > 0){
 			foreach($query->result() as $row){
 				$data[] = $row;
