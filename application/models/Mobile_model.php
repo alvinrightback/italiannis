@@ -28,8 +28,6 @@ class Mobile_model extends CI_Model{
 					$data[$key1]->menu = $temp;
 				}
 			}
-			echo '<pre>',print_r($data,1),'</pre>';
-			die();
 			return $data;
 		}
 	}
