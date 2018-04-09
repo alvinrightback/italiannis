@@ -46,25 +46,33 @@ class Mobile_model extends CI_Model{
 
 	public function submit_orders(){
 
-		$this->db->trans_start();
-		$data = array('table_number' => $this->input->post('table_number', TRUE),
-					  'date_created' => date('Y-m-d h:i:s'),
-					  'created_by' => 1);
-		$query = $this->db->inset('transaction', $data);
-		if($query){
+		// $this->db->trans_start();
+		// $data = array('table_number' => $this->input->post('table_number', TRUE),
+		// 			  'date_created' => date('Y-m-d h:i:s'),
+		// 			  'created_by' => 1);
+		// $query = $this->db->inset('transaction', $data);
+		// if($query){
 			
-		}
+		// }
 
 	}
 
 
 	public function check_availability(){
-		$this->db->select('MIN(quantity) as quantity');
-		$this->db->from('inventory');
-		$this->db->where_in('inventory_id', explode(",", $this->input->post('product_id')));
+
+		$this->db->select('product.inventory_id');
+		$this->db->from('product');
+		$this->db->where('product_id', $this->input->post('product_id'));
 		$query = $this->db->get();
+
 		if($query->num_rows() >0){
-			return $query->result()[0]->quantity;
+			$this->db->select('MIN(quantity) as quantity');
+			$this->db->from('inventory');
+			$this->db->where_in('inventory_id', explode(",", $query->result()[0]->inventory_id));
+			$query = $this->db->get();
+			if($query->num_rows() >0){
+				return $query->result()[0]->quantity;
+			}
 		}
 	}
 
