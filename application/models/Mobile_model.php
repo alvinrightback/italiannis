@@ -52,6 +52,7 @@ class Mobile_model extends CI_Model{
 			if($query->num_rows() >0){
 				foreach($query->result() as $key1 => $row1){
 					$data[] = $row1;
+					$data[$key1]->quantity = $row->quantity;
 					$data[$key1]->total = (int)($row->quantity*$row1->price); 
 				}
 				
