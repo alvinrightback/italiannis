@@ -44,7 +44,11 @@ class Mobile_model extends CI_Model{
 	}
 
 	public function display_orders(){
+		//print_r($this->input->post('orders'));
+		//die();
 		foreach($this->input->post('orders') as $row){
+			print_r($row);
+			die();
 			$this->db->select('*');
 			$this->db->from('product');
 			$this->db->where('product_id', $row->id);
@@ -64,8 +68,8 @@ class Mobile_model extends CI_Model{
 					  'remark' => $this->input->post('remark', TRUE),
 					  'created_by' => 1);
 		$query = $this->db->insert('transaction', $data);
+		$trans_id = $this->db->insert_id();
 		if($query){
-			$trans_id = $this->db->insert_id;
 			foreach($this->input->post('orders', TRUE) as $row){
 				$orders = array('trans_id' => $trans_id,
 								'product_id' => $row->id,
