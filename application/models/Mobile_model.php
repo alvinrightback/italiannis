@@ -44,18 +44,15 @@ class Mobile_model extends CI_Model{
 	}
 
 	public function display_orders(){
-		foreach(json_decode($this->input->post('orders', TRUE)) as $row){
-			$this->db->select('*');
+		foreach(json_decode($this->input->post('orders', TRUE)) as $key=>$row){
+			$this->db->select('price');
 			$this->db->from('product');
 			$this->db->where('product_id', $row->id);
 			$query = $this->db->get();
 			if($query->num_rows() >0){
-				foreach($query->result() as $key1 => $row1){
-					$data[] = $row1;
-					$data[$key1]->quantity = $row->quantity;
-					$data[$key1]->total = (int)($row->quantity*$row1->price); 
-				}
-				
+					$data[] = $query->result()[0];
+					$data[$key]->quantity = $row->quantity;
+					$data[$key]->total = (int)($row->quantity*$query->result()[0]->price); 				
 			}
 		}
 		return $data;
