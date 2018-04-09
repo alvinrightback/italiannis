@@ -127,8 +127,11 @@
                                             </h3>
                                             <ul class="plan-features">
                                                 <?php foreach ($row->orders as $key => $value): ?>
-                                                    <li><?php echo $value->name.' - '.$value->remark; ?></li>
+                                                    <li><?php echo $value->name?></li>
                                                 <?php endforeach ?>
+                                                    <?php if($row->remark !== NULL): ?>
+                                                    <li><label class="badge badge-warning">Remark:</label> <?php echo $row->remark?></li>
+                                                    <?php endif; ?> 
                                             </ul>
                                             <div class="plan-select">
                                                 <button class="btn btn-primary" onclick="showFinishModal('<?php echo $row->trans_id; ?>')">Finish</button>
