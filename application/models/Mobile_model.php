@@ -44,11 +44,7 @@ class Mobile_model extends CI_Model{
 	}
 
 	public function display_orders(){
-		//print_r($this->input->post('orders'));
-		//die();
-		foreach($this->input->post('orders') as $row){
-			print_r($row);
-			die();
+		foreach(json_decode($this->input->post('orders', TRUE)) as $row){
 			$this->db->select('*');
 			$this->db->from('product');
 			$this->db->where('product_id', $row->id);
@@ -63,14 +59,37 @@ class Mobile_model extends CI_Model{
 	public function submit_orders(){
 
 		$this->db->trans_start();
-		$data = array('table_number' => $this->input->post('table_number', TRUE),
-					  'date_created' => date('Y-m-d h:i:s'),
-					  'remark' => $this->input->post('remark', TRUE),
-					  'created_by' => 1);
-		$query = $this->db->insert('transaction', $data);
-		$trans_id = $this->db->insert_id();
-		if($query){
-			foreach($this->input->post('orders', TRUE) as $row){
+
+		$this->db->select('*');
+		$this->db->from('transaction');
+		$this->db->where('table_number', $this->input->post('table_number', TRUE));
+		$this->db->where('status', 0);
+		$this->db->where('DATE(date_created)', date('Y-m-d'));
+		$query = $this->db->get();
+		$pending = 0;
+		if($query->num_rows() >0){
+			$pending = 1;
+		}
+		
+		if($pending == 0){
+			$data = array('table_number' => $this->input->post('table_number', TRUE),
+						'date_created' => date('Y-m-d h:i:s'),
+						'remark' => $this->input->post('remark', TRUE),
+						'created_by' => 1);
+			$query = $this->db->insert('transaction', $data);
+			$trans_id = $this->db->insert_id();
+			if($query){
+				foreach(json_decode($this->input->post('orders', TRUE)) as $row){
+					$orders = array('trans_id' => $trans_id,
+									'product_id' => $row->id,
+									'quantity' => $row->quantity);
+					$this->db->insert('transaction_details', $orders);
+				}
+			}
+		}
+		else{
+			$trans_id = $query->result()[0]->trans_id;
+			foreach(json_decode($this->input->post('orders', TRUE)) as $row){
 				$orders = array('trans_id' => $trans_id,
 								'product_id' => $row->id,
 								'quantity' => $row->quantity);
