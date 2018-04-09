@@ -45,7 +45,7 @@ class Mobile_model extends CI_Model{
 
 	public function display_orders(){
 		foreach(json_decode($this->input->post('orders', TRUE)) as $key=>$row){
-			$this->db->select('price');
+			$this->db->select('*');
 			$this->db->from('product');
 			$this->db->where('product_id', $row->id);
 			$query = $this->db->get();
