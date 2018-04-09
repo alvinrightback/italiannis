@@ -50,7 +50,7 @@ class Mobile_model extends CI_Model{
 			$this->db->where('product_id', $row->id);
 			$query = $this->db->get();
 			if($query->num_rows() >0){
-				foreach($query->result() as $key1 = $row1){
+				foreach($query->result() as $key1 => $row1){
 					$data[] = $row1;
 					$data[$key1]->total = (int)($row->quantity*$row1->price); 
 				}
