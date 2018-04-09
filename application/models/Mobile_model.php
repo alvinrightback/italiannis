@@ -94,10 +94,20 @@ class Mobile_model extends CI_Model{
 		else{
 			$trans_id = $query->result()[0]->trans_id;
 			foreach(json_decode($this->input->post('orders', TRUE)) as $row){
-				$orders = array('trans_id' => $trans_id,
+				
+				$query = $this->db->get_where('transaction_details', array('trans_id'=>$trans_id, 'product_id'=>$row->id));
+				if($query->result() > 0){
+					$orders = array('trans_id' => $trans_id,
 								'product_id' => $row->id,
-								'quantity' => $row->quantity);
-				$this->db->insert('transaction_details', $orders);
+								'quantity' => (int)($row->quantity+$query->result()[0]->quantity));
+					$this->db->update('transaction_details',$orders, array('trans_details_id'=> $query->result()[0]->trans_details_id));
+				}
+				else{
+					$orders = array('trans_id' => $trans_id,
+					'product_id' => $row->id,
+					'quantity' => $row->quantity);
+					$this->db->insert('transaction_details', $orders);
+				}
 			}
 		}
 
