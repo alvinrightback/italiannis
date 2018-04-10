@@ -1,9 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-	class Logout extends MY_Controller{
+	class Logout extends CI_Controller{
 
-	public function index()
-	{
+	public function index(){
 		$this->session->sess_destroy();
 		redirect('login');
 	}

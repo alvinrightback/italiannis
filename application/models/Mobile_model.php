@@ -57,6 +57,9 @@ class Mobile_model extends CI_Model{
 		}
 		return $data;
 	}
+	function generateRandomString($length = 10) {
+		return substr(str_shuffle(str_repeat($x='0123456789', ceil($length/strlen($x)) )),1,$length);
+	}
 
 	public function submit_orders(){
 
@@ -74,7 +77,8 @@ class Mobile_model extends CI_Model{
 		}
 		
 		if($pending == 0){
-			$data = array('table_number' => $this->input->post('table_number', TRUE),
+			$data = array('trans_code' => $this->generateRandomString(),
+						'table_number' => $this->input->post('table_number', TRUE),
 						'date_created' => date('Y-m-d h:i:s'),
 						'remark' => $this->input->post('remark', TRUE),
 						'created_by' => 1);

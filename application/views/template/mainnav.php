@@ -2,6 +2,7 @@
 				<nav class="sidebar-horizontal navbar navbar-expand-lg navbar-dark bg-dark">
 					<div class="navbar-collapse" id="navbar-header-menu-outer">
 						<ul class="navbar-nav navbar-header-menu mr-auto">
+						<?php if($this->session->userdata('role') == 1): ?>
 							<li class="nav-item">
 								<a class="nav-link" href="<?php echo base_url('dashboard') ?>">
 									<i class="batch-icon batch-icon-browser-alt"></i>
@@ -50,6 +51,7 @@
 									<li><a class="dropdown-item" href="<?php echo base_url('display/manage') ?>">Manage</a></li>
 								</ul>
 							</li>
+						<?php endif;?>
 						</ul>
 					</div>
 				</nav>

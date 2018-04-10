@@ -6,6 +6,7 @@ class Transaction extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->load->model('transaction_model');
+		$this->check_admin();
 	}
 
 

@@ -7,6 +7,7 @@ class Forecasting extends MY_Controller {
 		parent::__construct();
 		$this->load->model('forecasting_model');
 		$this->load->model('product_model');
+		$this->check_admin();
    }
     
    public function index(){

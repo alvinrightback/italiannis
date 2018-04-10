@@ -8,15 +8,23 @@ class MY_Controller extends CI_Controller {
 		parent::__construct();
 		date_default_timezone_set('Asia/Manila');
 		$this->check_auth();
-		$this->get_userdata();
+		$this->get_userdata(); 
 		//$this->get_notification();
 	}
 
 	private function check_auth(){
 		if($this->router->class == 'login'){
 			if($this->session->all_userdata()){
-				if($this->session->userdata('is_logged_in') && $this->session->userdata('role') == 1){
+				if($this->session->userdata('is_logged_in') && $this->session->userdata('role') == 1 ){
 					redirect('dashboard');
+				}
+				else if($this->session->userdata('is_logged_in') && $this->session->userdata('role') == 2 ){
+					redirect('display/manage');
+				}
+				else if($this->session->userdata('is_logged_in') && $this->session->userdata('role') == 3 ){
+					redirect('display');
+				}
+				else{
 				}
 			}
 			else{
@@ -26,9 +34,11 @@ class MY_Controller extends CI_Controller {
 		}
 		else{
 			if($this->session->all_userdata()){
-				if(!$this->session->userdata('is_logged_in') || $this->session->userdata('role') != 1){
-					$this->session->sess_destroy();
-					redirect('login');
+				if(!$this->session->userdata('is_logged_in')){
+					if($this->session->userdata('role') != 1 || $this->session->userdata('role') != 2 || $this->session->userdata('role') != 3 ){
+						$this->session->sess_destroy();
+						redirect('login');
+					}
 				}
 			}
 			else{
@@ -45,7 +55,12 @@ class MY_Controller extends CI_Controller {
 		}
 
 	}
-
+	
+	public function check_admin(){
+		if($this->session->userdata('role') != 1){
+			redirect();
+		}
+	}
 
 	private function get_notification(){
 		$this->data['notifications'] = $this->notification_model->get_notifications();

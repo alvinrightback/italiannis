@@ -32,9 +32,9 @@ class Session_model extends CI_Model{
 	}
 
 
-	public function setSessionData($userID){
+	public function setSessionData($userID, $userRole){
 		$sess_details = array('user_id' => $userID,
-							  'role' => 1,
+							  'role' => $userRole,
 							  'is_logged_in' => TRUE);
 
 		$this->session->set_userdata($sess_details);

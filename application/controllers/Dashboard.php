@@ -5,6 +5,7 @@ class Dashboard extends MY_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->load->model('dashboard_model');
+		$this->check_admin();
 	}
 
 

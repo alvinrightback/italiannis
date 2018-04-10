@@ -21,7 +21,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbar-dropdown-navbar-profile" data-toggle="dropdown" data-flip="false" aria-haspopup="true" aria-expanded="false">
                                 <div class="profile-name">
-                                    Administrator
+                                <?php echo $this->data['user_role']; ?>
                                 </div>
                                 <div class="profile-picture bg-gradient bg-primary has-message float-right">
                                     <img src="<?php echo base_url('assets/img/profile-pic.jpg'); ?>" width="44" height="44">
