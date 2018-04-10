@@ -53,7 +53,12 @@ class Forecasting_model extends CI_Model{
         }
 
         for($i=0; $i<12; $i++){
-            $data2018[$i] = (int)($data2017[$i]+((($data2017[$i]-$data2016[$i])/$data2016[$i])*100));
+            if($data2016[$i] == 0){
+                $data2018[$i] = (int)($data2017[$i]);    
+            }
+            else{  
+             $data2018[$i] = (int)($data2017[$i]+( ( ($data2017[$i]-$data2016[$i]) / $data2016[$i] )*100));
+            }
         }
 
         return $data2018;
