@@ -49,12 +49,8 @@
 				<div class="row mx-0">
 					<div class="col-md-7 order-md-2 signin-right-column px-5 bg-dark" data-qp-bg-image="bg-image-3.jpg">
 						<a class="signin-logo d-sm-block d-md-none" href="#">
-							<img src="assets/img/logo.png" width="145" height="32.3" alt="QuillPro">
+							<img src="assets/img/logo.png" class="img-responsive" width="320" height="150" alt="QuillPro">
 						</a>
-						<h1 class="display-4">Sign In To get Started</h1>
-						<p class="lead mb-5">
-							Lorem ipsum dolor
-						</p>
 					</div>
 					<div class="col-md-5 order-md-1 signin-left-column bg-white px-5">
 						<a class="signin-logo d-sm-none d-md-block" href="#">

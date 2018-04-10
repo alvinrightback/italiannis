@@ -3016,7 +3016,7 @@ $(document).ready(function() {
 
 		if($(placeholder).length){
 			$(placeholder).each(function(){
-				$(this).DataTable();
+				$(this).DataTable({"ordering": false});
 			});
 		}
 	}
@@ -3033,7 +3033,7 @@ $(document).ready(function() {
  						"pagingType": "simple",
  						"lengthChange": false,
  						"searching": true,
- 						"ordering": true,
+ 						"ordering": false,
  						"info": false,
  						"autoWidth": true
  					});

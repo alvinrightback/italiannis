@@ -86,6 +86,8 @@ class Mobile_model extends CI_Model{
 									'product_id' => $row->id,
 									'quantity' => $row->quantity);
 					$this->db->insert('transaction_details', $orders);
+
+					$this->deduct_inventory($row->id, $row->quantity);
 				}
 			}
 		}
@@ -93,6 +95,7 @@ class Mobile_model extends CI_Model{
 			$trans_id = $query->result()[0]->trans_id;
 			foreach(json_decode($this->input->post('orders', TRUE)) as $row){
 				
+				//insert or update transaction_details(orders)
 				$query = $this->db->get_where('transaction_details', array('trans_id'=>$trans_id, 'product_id'=>$row->id));
 				if($query->result() > 0){
 					$orders = array('trans_id' => $trans_id,
@@ -106,14 +109,37 @@ class Mobile_model extends CI_Model{
 					'quantity' => $row->quantity);
 					$this->db->insert('transaction_details', $orders);
 				}
+				
+				$this->deduct_inventory($row->id, $row->quantity);
 			}
 		}
 
-		$query = $this->db->trans_complete();
-		if($query){
+		$complete = $this->db->trans_complete();
+		if($complete){
 			return TRUE;
 		}
 
+	}
+
+	public function deduct_inventory($id, $quantity){
+			$this->db->select('product.inventory_id');
+			$this->db->from('product');
+			$this->db->where('product_id', $id);
+			$this->db->limit(1);
+			$query1 = $this->db->get();
+
+			$this->db->select('inventory.inventory_id, inventory.quantity');
+			$this->db->from('inventory');
+			$this->db->where_in('inventory.inventory_id', explode(",", $query1->result()[0]->inventory_id));
+			$query2 = $this->db->get();
+
+			if($query2->num_rows() >0){
+				foreach($query2->result() as $row1){
+					$newQuantity = array('quantity' => (int)$row1->quantity- (int)$quantity);
+					$this->db->update('inventory',$newQuantity, array('inventory_id'=> $row1->inventory_id));
+				}
+				
+			}
 	}
 
 
