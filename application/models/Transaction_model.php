@@ -48,26 +48,49 @@ class Transaction_model extends CI_Model{
 				}
 				else{
 					//Update record
+					$this->addQuantity($row, $this->input->post('order_quantity', TRUE)[$key]);
 					$this->db->update('transaction_details', $data, array('trans_details_id' => $row));
 				}
 			}
 			else{
 				//Update record
+				$this->addQuantity($row, $this->input->post('order_quantity', TRUE)[$key]);
 				$this->db->update('transaction_details', $data, array('trans_details_id' => $row));
 			}
+			
 
-			$check = $this->db->get_where('transaction_details', array('trans_details_id'=>$row->trans_details_id), 1);
-			$currentQuantity = $check->result()[0]->quantity;
-
-			if($currentQuantity > )
-
-			//CONTINUE HERE
-
-		
 		}
 		$query = $this->db->trans_complete();
 		if($query){
 			return TRUE;
+		}
+	}
+
+	public function addQuantity($id, $quantityFromForm){
+		$check = $this->db->get_where('transaction_details', array('trans_details_id'=>$id), 1);
+		$currentQuantity = $check->result()[0]->quantity;
+		$addition = 0;
+		if($currentQuantity !== $quantityFromForm){
+			$addition = $currentQuantity - $quantityFromForm;
+			
+		}
+		$this->db->select('product.inventory_id');
+		$this->db->from('product');
+		$this->db->where('product_id', $check->result()[0]->product_id);
+		$this->db->limit(1);
+		$query1 = $this->db->get();
+
+		$this->db->select('inventory.inventory_id, inventory.quantity');
+		$this->db->from('inventory');
+		$this->db->where_in('inventory.inventory_id', explode(",", $query1->result()[0]->inventory_id));
+		$query2 = $this->db->get();
+
+		if($query2->num_rows() >0){
+			foreach($query2->result() as $row1){
+				$newQuantity = array('quantity' => (int)$row1->quantity + (int)$addition);
+				$this->db->update('inventory',$newQuantity, array('inventory_id'=> $row1->inventory_id));
+			}
+			
 		}
 	}
 

@@ -44,7 +44,7 @@
 						<div class="col-md-12">
 							<div class="card">
 								<div class="card-header">
-									User Management
+									Best Seller
 								</div>
 								<div class="card-table table-responsive">
 									<table class="table table-hover align-middle">
@@ -73,7 +73,7 @@
 													</div>
 												</td>
 												<td>
-													<a href="#">johanna.quinn@quillpro.com</a>
+													<a href="#">johanna.quinn@gmail.com</a>
 												</td>
 												<td class="text-center">
 													<span class="badge badge-primary">Approved</span>
@@ -88,156 +88,11 @@
 													</a>
 												</td>
 											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="profile-picture bg-gradient bg-primary has-message float-right d-flex mr-3">
-															<img src="assets/img/profile-pic-3.jpg" width="44" height="44">
-														</div>
-														<div class="media-body">
-															<div class="heading mt-1">
-																Teal'c Jaffa
-															</div>
-															<div class="subtext">tealc</div>
-														</div>
-													</div>
-												</td>
-												<td>
-													<a href="#">tealc.jaffa@kawoosh.com</a>
-												</td>
-												<td class="text-center">
-													<span class="badge badge-success">Reviewing</span>
-												</td>
-												<td>15th Jan 2017</td>
-												<td class="text-right">
-													<a class="btn btn-primary">
-														<i class="batch-icon batch-icon-eye"></i>
-													</a>
-													<a class="btn btn-success">
-														<i class="batch-icon batch-icon-quill"></i>
-													</a>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="profile-picture bg-gradient bg-secondary float-right d-flex mr-3">
-															<img src="assets/img/profile-pic-2.jpg" width="44" height="44">
-														</div>
-														<div class="media-body">
-															<div class="heading mt-1">
-																Samantha Carter
-															</div>
-															<div class="subtext">samanthac</div>
-														</div>
-													</div>
-												</td>
-												<td>
-													<a href="#">samantha.carter@sgc.com</a>
-												</td>
-												<td class="text-center">
-													<span class="badge badge-danger">Rejected</span>
-												</td>
-												<td>7th Jan 2017</td>
-												<td class="text-right">
-													<a class="btn btn-primary">
-														<i class="batch-icon batch-icon-eye"></i>
-													</a>
-													<a class="btn btn-success">
-														<i class="batch-icon batch-icon-quill"></i>
-													</a>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="profile-picture bg-gradient bg-secondary has-message float-right d-flex mr-3">
-															<img src="assets/img/profile-pic-4.jpg" width="44" height="44">
-														</div>
-														<div class="media-body">
-															<div class="heading mt-1">
-																General Landry
-															</div>
-															<div class="subtext">glandry</div>
-														</div>
-													</div>
-												</td>
-												<td>
-													<a href="#">g.landry@sgc.com</a>
-												</td>
-												<td class="text-center">
-													<span class="badge badge-warning">Pending</span>
-												</td>
-												<td>7th Jan 2017</td>
-												<td class="text-right">
-													<a class="btn btn-primary">
-														<i class="batch-icon batch-icon-eye"></i>
-													</a>
-													<a class="btn btn-success">
-														<i class="batch-icon batch-icon-quill"></i>
-													</a>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="profile-picture bg-gradient bg-primary float-right d-flex mr-3">
-															<img src="assets/img/profile-pic-5.jpg" width="44" height="44">
-														</div>
-														<div class="media-body">
-															<div class="heading mt-1">
-																Daniella Jackson
-															</div>
-															<div class="subtext">jacksond</div>
-														</div>
-													</div>
-												</td>
-												<td>
-													<a href="#">daniella.jackson@chabaai.com</a>
-												</td>
-												<td class="text-center">
-													<span class="badge badge-default">Banned</span>
-												</td>
-												<td>5th Jan 2017</td>
-												<td class="text-right">
-													<a class="btn btn-primary">
-														<i class="batch-icon batch-icon-eye"></i>
-													</a>
-													<a class="btn btn-success">
-														<i class="batch-icon batch-icon-quill"></i>
-													</a>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="media">
-														<div class="profile-picture bg-gradient bg-primary float-right d-flex mr-3">
-															<img src="assets/img/profile-pic-6.jpg" width="44" height="44">
-														</div>
-														<div class="media-body">
-															<div class="heading mt-1">
-																Jacklin O'neil
-															</div>
-															<div class="subtext">jakjak</div>
-														</div>
-													</div>
-												</td>
-												<td>
-													<a href="#">jack.oneill@ancientgene.com</a>
-												</td>
-												<td class="text-center">
-													<span class="badge badge-info">Action Required</span>
-												</td>
-												<td>1st Jan 2017</td>
-												<td class="text-right">
-													<a class="btn btn-primary">
-														<i class="batch-icon batch-icon-eye"></i>
-													</a>
-													<a class="btn btn-success">
-														<i class="batch-icon batch-icon-quill"></i>
-													</a>
-												</td>
-											</tr>
+											
+											
+											
+											
+											
 										</tbody>
 									</table>
 								</div>
