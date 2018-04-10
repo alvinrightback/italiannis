@@ -161,4 +161,32 @@ class Mobile_model extends CI_Model{
 		}
 	}
 
+
+	public function bill_out(){
+
+		$this->db->select('*');
+		$this->db->from('transaction');
+		$this->db->where('table_number', $this->input->post('table_number', TRUE));
+		$this->db->where('status', 0);
+		$this->db->where('DATE(date_created)', date('Y-m-d'));
+		$this->db->limit(1);
+		$query = $this->db->get();
+		if($query->num_rows() == 1){
+			$this->db->trans_start();
+			$data = array('trans_id' => $query->result()[0]->trans_id,
+						  'payment_type' => $this->input->post('payment_type', TRUE),
+						  'discount' => $this->input->post('discount', TRUE),
+						  'total' => $this->input->post('total', TRUE)
+			);
+			$this->db->insert('transaction_payment', $data);
+			$this->db->update('transaction', array('status' => 1), array('trans_id'=> $query->result()[0]->trans_id));
+
+			$query = $this->db->trans_complete();
+			if($query){
+				return TRUE;
+			}
+		}
+		
+	}
+
 }

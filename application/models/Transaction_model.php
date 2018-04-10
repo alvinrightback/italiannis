@@ -55,6 +55,14 @@ class Transaction_model extends CI_Model{
 				//Update record
 				$this->db->update('transaction_details', $data, array('trans_details_id' => $row));
 			}
+
+			$check = $this->db->get_where('transaction_details', array('trans_details_id'=>$row->trans_details_id), 1);
+			$currentQuantity = $check->result()[0]->quantity;
+
+			if($currentQuantity > )
+
+			//CONTINUE HERE
+
 		
 		}
 		$query = $this->db->trans_complete();
@@ -63,5 +71,13 @@ class Transaction_model extends CI_Model{
 		}
 	}
 
+
+	public function payment_complete($id){
+		$data = array('status' => 2);
+		$query = $this->db->update('transaction',$data, array('trans_id'=> $id));
+		if($query){
+			return TRUE;
+		}
+	}
 
 }

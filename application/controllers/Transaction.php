@@ -74,4 +74,16 @@ class Transaction extends MY_Controller {
 			}
 		}
 	}
+
+	public function payment_complete($id){
+		$query = $this->transaction_model->payment_complete($id);
+		if($query){
+			$this->session->set_flashdata('success', 'Successful!');
+			redirect('transaction');
+		}
+		else{
+			$this->session->set_flashdata('failed', 'Failed!');
+			redirect('transaction');
+		}
+	}
 }

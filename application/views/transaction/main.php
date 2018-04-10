@@ -5,7 +5,6 @@
 		$('#Transaction_Details, #Transaction_Details_Progress').css('display', 'block');
 		$('#Transaction_Details_Body, #Payment_Details_Complete, #Transaction_Details_Status, #Transaction_Payment_Total, #Transaction_Edit_Orders').css('display', 'none');
 		$('#Transaction_Details_Status').removeAttr( "class");
-		$('#Edit_Order_Btn').prop('href','');
 		$('#Edit_Order_ID').text('');
 		$.ajax({
 			'url' : '<?php  echo base_url('transaction/get_transaction_details/'); ?>',
@@ -14,6 +13,7 @@
 			'dataType' : 'json',
 			'cache' : false,
 			'success' : function(data){ 
+			    	$('#Payment_Complete_Btn').prop('href','<?php echo base_url('transaction/payment_complete/');?>'+data[0].trans_id);
  					$('#Transaction_Table_Number').text('Table number: '+data[0].table_number);
  					$('#Transaction_Date').text('Date: '+data[0].date_created);
 					$('#Edit_Order_ID').text(data[0].trans_id);
@@ -280,7 +280,9 @@
 						</table>
 						<p id="Transaction_Payment_Total" class="pull-right" style="padding-right:25%; font-weight: bold; display: none;"></p>
 					</div>
-					<div id="Payment_Details_Complete" style="display: none;"><button class="btn btn-success">Payment Complete</button></div>
+					<div id="Payment_Details_Complete" style="display: none;">
+						<a id="Payment_Complete_Btn" href="" class="btn btn-success">Payment Complete</a>
+					</div>
 					<div id="Transaction_Edit_Orders" style="display: none;">
 						<button id="Edit_Order_Btn" onclick="javascript: editOrders();" class="btn btn-primary">Edit Orders</button>
 						<p id="Edit_Order_ID" style="display: none"></p>

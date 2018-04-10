@@ -17,6 +17,14 @@ class Display extends MY_Controller {
 		$this->load->view('display/main', $data);
 	}
 
+	public function manage(){
+		$data['title'] = "Kitchen Display";
+		$data['success'] = $this->session->flashdata('success');
+		$data['failed'] = $this->session->flashdata('failed');
+		$data['orders'] = $this->display_model->get_orders();
+		$this->render('display/manage', $data);
+	}
+
 	public function get_order(){
 		echo json_encode($this->display_model->get_order());
 	}
@@ -33,11 +41,11 @@ class Display extends MY_Controller {
 			$query = $this->display_model->finish_orders();
 			if($query){
 				$this->session->set_flashdata('success', 'Successful!');
-				redirect('display');
+				redirect('display/manage');
 			}
 			else{
 				$this->session->set_flashdata('failed', 'Failed!');
-				redirect('display');
+				redirect('display/manage');
 			}
 		}
 	}

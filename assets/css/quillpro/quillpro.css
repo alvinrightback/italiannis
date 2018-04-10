@@ -4106,8 +4106,8 @@ input[type=date].valid, input[type=date]:focus.valid, input[type=datetime-local]
     list-style: outside none none; }
     .price-list-type-2 .plan-features li {
       padding: 10px 5%; }
-    .price-list-type-2 .plan-features li:nth-child(even) {
-      background: rgba(0, 0, 0, 0.08); }
+    /* .price-list-type-2 .plan-features li:nth-child(even) {
+      background: rgba(0, 0, 0, 0.08); } */
     .price-list-type-2 .plan-features i {
       margin-right: 8px;
       opacity: 0.4; }

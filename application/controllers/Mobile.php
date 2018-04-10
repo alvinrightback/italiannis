@@ -69,4 +69,18 @@ class Mobile extends CI_Controller {
 			echo json_encode($data);
  		}
 	}
+
+	public function bill_out(){
+		$query = $this->mobile_model->bill_out();
+		if($query){
+			$data['status'] = 1;
+			$data['message'] = 'success';
+			echo json_encode($data);
+		}
+		else{
+			$data['status'] = 0;
+			$data['message'] = 'failed';
+			echo json_encode($data);
+ 		}
+	}
 }
