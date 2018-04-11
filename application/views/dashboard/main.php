@@ -41,60 +41,37 @@
 						</div>
 					</div>
 					<div class="row mb-5">
-						<div class="col-md-12">
+						<div class="col-md-6">
 							<div class="card">
 								<div class="card-header">
-									Best Seller
+									Best Seller: <?php echo date('Y');?>
 								</div>
 								<div class="card-table table-responsive">
+								<?php if(is_array($best_sellers)): ?>
 									<table class="table table-hover align-middle">
 										<thead class="thead-light">
 											<tr>
-												<th>Member</th>
-												<th>Email</th>
-												<th class="text-center">Status</th>
-												<th>Created</th>
-												<th class="text-right">Action</th>
+												<th>Name</th>
+												<th>Sales Quantity</th>
 											</tr>
 										</thead>
 										<tbody>
+											<?php foreach($best_sellers as $row):?>
+											
 											<tr>
 												<td>
-													<div class="media">
-														<div class="profile-picture bg-gradient bg-primary has-message float-right d-flex mr-3">
-															<img src="assets/img/profile-pic.jpg" width="44" height="44">
-														</div>
-														<div class="media-body">
-															<div class="heading mt-1">
-																Johanna Quinn
-															</div>
-															<div class="subtext">jquinn897</div>
-														</div>
-													</div>
+													<?php echo $row->name;  ?>
 												</td>
 												<td>
-													<a href="#">johanna.quinn@gmail.com</a>
+													<?php echo $row->total_quantity; ?>
 												</td>
-												<td class="text-center">
-													<span class="badge badge-primary">Approved</span>
-												</td>
-												<td>23rd Feb 2017</td>
-												<td class="text-right">
-													<a class="btn btn-primary">
-														<i class="batch-icon batch-icon-eye"></i>
-													</a>
-													<a class="btn btn-success">
-														<i class="batch-icon batch-icon-quill"></i>
-													</a>
-												</td>
+												
 											</tr>
-											
-											
-											
-											
-											
+										<?php endforeach; ?>
+									
 										</tbody>
 									</table>
+								<?php endif;?>
 								</div>
 							</div>
 						</div>

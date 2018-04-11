@@ -14,7 +14,8 @@
 			'cache' : false,
 			'success' : function(data){ 
 			    	$('#Payment_Complete_Btn').prop('href','<?php echo base_url('transaction/payment_complete/');?>'+data[0].trans_id);
- 					$('#Transaction_Table_Number').text('Table number: '+data[0].table_number);
+					$('#Transaction_Invoice_ID').text('Invoice ID: '+data[0].invoice_id);
+					$('#Transaction_Table_Number').text('Table number: '+data[0].table_number);
  					$('#Transaction_Date').text('Date: '+data[0].date_created);
 					$('#Edit_Order_ID').text(data[0].trans_id);
 					if(data[0].status == 0){
@@ -212,6 +213,7 @@
 						<table id="datatable-1" class="table table-datatable table-bordered table-hover">
 							<thead class="thead-dark">
 								<tr>
+									<th>Invoice ID</th>	
 									<th>Table Number</th>
 									<th>Date</th>
 									<th>Status</th>
@@ -220,6 +222,7 @@
 							<tbody>
 								<?php foreach($transaction as $row): ?>
 									<tr style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="View Transaction" onclick="javascript:getTransactionDetails(<?php echo $row->trans_id; ?>)">
+										<td><?php echo $row->invoice_id; ?></td>
 										<td><?php echo $row->table_number; ?></td>
 										<td><?php echo date('Y-m-d h:i A', strtotime($row->date_created));	 ?></td>
 										<td class="text-center">
@@ -260,6 +263,7 @@
 				</div>
 
 				<div id="Transaction_Details_Body" style="display: none;">
+					<p id="Transaction_Invoice_ID"></p>
 					<p id="Transaction_Table_Number"></p>
 					<p id="Transaction_Date"></p>
 					<hr>

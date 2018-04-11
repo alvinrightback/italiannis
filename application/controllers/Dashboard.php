@@ -14,6 +14,7 @@ class Dashboard extends MY_Controller {
 		$data['pending_orders'] = $this->dashboard_model->get_pending_orders();
 		$data['occupied_tables'] = $this->dashboard_model->get_today_occupied_tables();
 		$data['today_sales'] = $this->dashboard_model->get_today_sales();
+		$data['best_sellers'] = $this->dashboard_model->get_best_sellers();
 		$this->render('dashboard/main', $data);
 	}
 

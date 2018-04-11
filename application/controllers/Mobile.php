@@ -83,4 +83,30 @@ class Mobile extends CI_Controller {
 			echo json_encode($data);
  		}
 	}
+
+	public function get_current_quantity(){
+		$query = $this->mobile_model->get_current_quantity();
+		if($query){
+			$data['status'] = 1;
+			$data['message'] = 'success';
+			$data['current_quantity'] = $query;
+			echo json_encode($data);
+		}
+		else{
+			$data['status'] = 0;
+			$data['message'] = 'failed';
+			$data['current_quantity'] = $query;
+			echo json_encode($data);
+ 		}
+	}
+
+	public function changeInvoice(){
+		$query = $this->db->get('transaction');
+		foreach($query->result() as $row){
+			$this->db->select('CONCAT( "I-", LPAD(trans_id,7,"0") ) as invoice_id');
+			$query1 = $this->db->get_where('transaction', array('trans_id'=>$row->trans_id));
+
+			$this->db->update('transaction', array('invoice_id' => $query1->result()[0]->invoice_id), array('trans_id'=>$row->trans_id));
+		}
+	}
 }

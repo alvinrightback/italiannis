@@ -77,14 +77,17 @@ class Mobile_model extends CI_Model{
 		}
 		
 		if($pending == 0){
-			$data = array('trans_code' => $this->generateRandomString(),
-						'table_number' => $this->input->post('table_number', TRUE),
+			$data = array('table_number' => $this->input->post('table_number', TRUE),
 						'date_created' => date('Y-m-d h:i:s'),
 						'remark' => $this->input->post('remark', TRUE),
 						'created_by' => 1);
 			$query = $this->db->insert('transaction', $data);
 			$trans_id = $this->db->insert_id();
 			if($query){
+				$this->db->select('CONCAT( "I-", LPAD(trans_id,7,"0") ) as invoice_id');
+				$query1 = $this->db->get_where('transaction', array('trans_id'=>$trans_id));
+				$this->db->update('transaction', array('invoice_id' => $query1->result()[0]->invoice_id), array('trans_id'=>$trans_id));
+				
 				foreach(json_decode($this->input->post('orders', TRUE)) as $row){
 					$orders = array('trans_id' => $trans_id,
 									'product_id' => $row->id,
@@ -193,4 +196,25 @@ class Mobile_model extends CI_Model{
 		
 	}
 
+
+	public function get_current_quantity(){
+		$this->db->select('trans_id');
+		$this->db->from('transaction');
+		$this->db->where('table_number', $this->input->post('table_number', TRUE));
+		$this->db->where('status', 0);
+		$this->db->where('DATE(date_created)', date('Y-m-d'));
+		$this->db->limit(1);
+		$query = $this->db->get();
+		if($query->num_rows() == 1){
+			$this->db->select('quantity');
+			$this->db->from('transaction_details');
+			$this->db->where('trans_id', $query->result()[0]->trans_id);
+			$this->db->where('product_id', $this->input->post('product_id', TRUE));
+			$this->db->limit(1);
+			$query1 = $this->db->get();
+			if($query1->num_rows() == 1){
+				return $query1->result()[0]->quantity;
+			}
+		}
+	}
 }
