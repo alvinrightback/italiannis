@@ -79,7 +79,8 @@ class Inventory_model extends CI_Model{
 	}
 
 	public function edit_product_quantity($inventory_id){
-		$query = $this->db->query('UPDATE inventory SET quantity=quantity+1 WHERE inventory_id IN('.$inventory_id.')');
+		$add = $this->input->post('Add_Quantity', TRUE);
+		$query = $this->db->query('UPDATE inventory SET quantity=quantity+'.$add.' WHERE inventory_id IN('.$inventory_id.')');
 
 		if($query){
 			return TRUE;

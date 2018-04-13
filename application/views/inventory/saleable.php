@@ -59,48 +59,11 @@
 	}
 	?>
 
-	<div class="modal fade" id="exampleModalToolTip" tabindex="-1" role="dialog" aria-labelledby="exampleModalToolTip" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLongTitle">Add New Item</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<?php echo form_open('inventory/add_now'); ?>
-					<div class="form-group">
-						<label for="exampleFormControlInput1">Item Name</label>
-						<input type="text" class="form-control" id="itemName" name="Item_Name" placeholder="e.g. garlic, tomatoes, beans etc. " required>
-					</div>
-					<div class="form-group">
-						<label for="exampleFormControlInput1">Quantity</label>
-						<input type="number" class="form-control" id="quantity" name="Quantity" placeholder="Quantity" required>
-					</div>
-
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary">Submit</button>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
-
-
 <div class="row">
 	<div class="col-md-6 col-lg-6 col-xl-8 mb-5">
 		<div class="card">
 			<div class="card-header">
 				Food & Beverages
-				<div class="header-btn-block">
-					<button type="button" data-toggle="modal" data-target="#exampleModalToolTip" class="btn btn-primary">
-						<i class="batch-icon batch-icon-add"></i> 
-						New Item
-					</button>
-				</div>
 			</div>
 			<div class="card-body">
 
