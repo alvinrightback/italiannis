@@ -108,6 +108,7 @@ class Mobile_model extends CI_Model{
 					$orders = array('trans_id' => $trans_id,
 								'product_id' => $row->id,
 								'quantity' => (int)($row->quantity+$query->result()[0]->quantity));
+					
 					$this->db->update('transaction_details',$orders, array('trans_details_id'=> $query->result()[0]->trans_details_id));
 				}
 				else{
