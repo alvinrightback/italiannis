@@ -109,4 +109,32 @@ class Mobile extends CI_Controller {
 			$this->db->update('transaction', array('invoice_id' => $query1->result()[0]->invoice_id), array('trans_id'=>$row->trans_id));
 		}
 	}
+
+	public function register_card(){
+		$query = $this->mobile_model->register_card();
+		if($query){
+			$data['status'] = 1;
+			$data['message'] = 'success';
+			echo json_encode($data);
+		}
+		else{
+			$data['status'] = 0;
+			$data['message'] = 'failed';
+			echo json_encode($data);
+ 		}
+	}
+
+	public function check_card(){
+		$query = $this->mobile_model->check_card();
+		if($query){
+			$data['status'] = 1;
+			$data['message'] = 'success';
+			echo json_encode($data);
+		}
+		else{
+			$data['status'] = 0;
+			$data['message'] = 'failed';
+			echo json_encode($data);
+ 		}
+	}
 }
