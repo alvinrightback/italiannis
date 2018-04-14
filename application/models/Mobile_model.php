@@ -104,7 +104,7 @@ class Mobile_model extends CI_Model{
 				
 				//insert or update transaction_details(orders)
 				$query = $this->db->get_where('transaction_details', array('trans_id'=>$trans_id, 'product_id'=>$row->id));
-				if($query->result() > 0){
+				if($query->num_rows() > 0){
 					$orders = array('trans_id' => $trans_id,
 								'product_id' => $row->id,
 								'quantity' => (int)($row->quantity+$query->result()[0]->quantity));
@@ -224,6 +224,20 @@ class Mobile_model extends CI_Model{
 			if($query1->num_rows() == 1){
 				return $query1->result()[0]->quantity;
 			}
+		}
+	}
+
+	public function register_card(){
+		$query = $this->db->insert('card', array('card_string'=>$this->input->post('card_string', TRUE), 'date_created'=>date('Y-m-d h:i:s')));
+		if($query){
+			return TRUE;
+		}
+	}
+		
+	public function check_card(){
+		$query = $this->db->get_where('card', array('card_string'=>$this->input->post('card_string', TRUE)));
+		if($query){
+			return TRUE;
 		}
 	}
 }
