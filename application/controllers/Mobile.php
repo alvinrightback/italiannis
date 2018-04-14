@@ -121,9 +121,9 @@ class Mobile extends CI_Controller {
 			$data['status'] = 0;
 			$data['message'] = 'failed';
 			echo json_encode($data);
-		}
+ 		}
 	}
-		
+
 	public function check_card(){
 		$query = $this->mobile_model->check_card();
 		if($query){
@@ -135,6 +135,6 @@ class Mobile extends CI_Controller {
 			$data['status'] = 0;
 			$data['message'] = 'failed';
 			echo json_encode($data);
-		}
+ 		}
 	}
 }

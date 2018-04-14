@@ -100,16 +100,19 @@ class Mobile_model extends CI_Model{
 		}
 		else{
 			$trans_id = $query->result()[0]->trans_id;
-			foreach(json_decode($this->input->post('orders', TRUE)) as $row){
-				
-				//insert or update transaction_details(orders)
-				$query = $this->db->get_where('transaction_details', array('trans_id'=>$trans_id, 'product_id'=>$row->id));
-				if($query->num_rows() > 0){
+			foreach(json_decode($this->input->post('orders', TRUE)) as $key=>$row){
+
+				$this->db->select('*');
+				$this->db->from('transaction_details');
+				$this->db->where('trans_id', $trans_id);
+				$this->db->where('product_id', $row->id);
+				$query2 = $this->db->get();
+
+				if($query2->num_rows() > 0){
 					$orders = array('trans_id' => $trans_id,
 								'product_id' => $row->id,
-								'quantity' => (int)($row->quantity+$query->result()[0]->quantity));
-					
-					$this->db->update('transaction_details',$orders, array('trans_details_id'=> $query->result()[0]->trans_details_id));
+								'quantity' => (int)($row->quantity+$query2->result()[0]->quantity));
+					$this->db->update('transaction_details',$orders, array('trans_details_id'=> $query2->result()[0]->trans_details_id));
 				}
 				else{
 					$orders = array('trans_id' => $trans_id,
@@ -233,7 +236,6 @@ class Mobile_model extends CI_Model{
 			return TRUE;
 		}
 	}
-		
 	public function check_card(){
 		$query = $this->db->get_where('card', array('card_string'=>$this->input->post('card_string', TRUE)));
 		if($query){
