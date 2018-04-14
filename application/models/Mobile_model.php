@@ -181,10 +181,18 @@ class Mobile_model extends CI_Model{
 		$query = $this->db->get();
 		if($query->num_rows() == 1){
 			$this->db->trans_start();
+			if($this->input->post('discount', TRUE) != 0){
+				$discount = 1;
+				$total = $this->input->post('discount', TRUE);
+			}
+			else{
+				$discount = 0;
+				$total = $this->input->post('total', TRUE);
+			}
 			$data = array('trans_id' => $query->result()[0]->trans_id,
 						  'payment_type' => $this->input->post('payment_type', TRUE),
-						  'discount' => $this->input->post('discount', TRUE),
-						  'total' => $this->input->post('total', TRUE)
+						  'discount' => $discount,
+						  'total' => $total
 			);
 			$this->db->insert('transaction_payment', $data);
 			$this->db->update('transaction', array('status' => 1), array('trans_id'=> $query->result()[0]->trans_id));
