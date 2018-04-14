@@ -3,7 +3,7 @@
 	function getTransactionDetails(id){
 		$('#table_orders').DataTable().destroy();
 		$('#Transaction_Details, #Transaction_Details_Progress').css('display', 'block');
-		$('#Transaction_Details_Body, #Payment_Details_Complete, #Transaction_Details_Status, #Transaction_Payment_Total, #Transaction_Edit_Orders').css('display', 'none');
+		$('#Transaction_Details_Body, #Payment_Details_Complete, #Transaction_Details_Status, #Transaction_Edit_Orders').css('display', 'none');
 		$('#Transaction_Details_Status').removeAttr( "class");
 		$('#Edit_Order_ID').text('');
 		$.ajax({
@@ -35,18 +35,7 @@
 					}
 					$('#Transaction_Details_Status').css('display', 'block');
 
-					if(data[0].payment){
-						$('#Payment_Details').css('display', 'block');	 
-						var payment_type = data[0].payment[0].payment_type == 1? 'Cash':'Card';
-						var discount = data[0].payment[0].discount == 1? 'Yes':'No';
-						$('#Transaction_Payment_Type').text("Type: "+payment_type);
-						$('#Transaction_Payment_Total').css('display', 'block');
-						$('#Transaction_Payment_Total').text("Grand Total: "+data[0].payment[0].total);
-						$('#Transaction_Payment_Discount').text("Discount: "+discount);
-					 }
-					 else{
-						$('#Payment_Details').css('display', 'none');	 
-					 }
+
 				    if(data[0].status == 0){
 						$('#Transaction_Edit_Orders').css('display', 'block');	 
 					}
@@ -58,10 +47,10 @@
 					}
 
  					var myTable = $('#table_orders').DataTable({
- 						"paging": false,
+ 						"bSort": false,
+						"paging": false,
  						"lengthChange": false,
  						"searching": false,
- 						"ordering": true,
  						"info": false,
  						"autoWidth": true,
  						"columns": [{
@@ -83,12 +72,24 @@
 
  						}]
  					});
+					
+ 				 	var subtotal = 0;
+					myTable.clear();
+ 					$.each(data[0].orders, function(index, value) {
+ 					 	subtotal = subtotal+parseInt(value.total);
+						myTable.row.add(value);
+					});
+					
+					if(data[0].payment){
+						myTable.row.add({name: " ", price: " ", quantity: "Subtotal", total: subtotal, order_status: " "});
+						if(data[0].payment[0].discount == 1){
+							myTable.row.add({name: " ", price: " ", quantity: "Discount card (20%)", total: subtotal-parseInt(data[0].payment[0].total), order_status: " "});	
+						}
+						myTable.row.add({name: " ", price: " ", quantity: "Total", total: parseInt(data[0].payment[0].total), order_status : " "});
+						myTable.row.add({name: " ", price: " ", quantity: "Payment Type", total: data[0].payment[0].payment_type == 1? 'Cash':'Card', order_status : " "});
+					 }
+					myTable.draw();
 
- 					 myTable.clear();
- 					 $.each(data[0].orders, function(index, value) {
- 					 	myTable.row.add(value);
- 					 });
- 					myTable.draw();
  				},
 			'complete' : function(){
 				$('#Transaction_Details_Progress').css('display', 'none');
@@ -282,20 +283,13 @@
 							<tbody>
 							</tbody>
 						</table>
-						<p id="Transaction_Payment_Total" class="pull-right" style="padding-right:25%; font-weight: bold; display: none;"></p>
-					</div>
-					<div id="Payment_Details_Complete" style="display: none;">
-						<a id="Payment_Complete_Btn" href="" class="btn btn-success">Payment Complete</a>
 					</div>
 					<div id="Transaction_Edit_Orders" style="display: none;">
 						<button id="Edit_Order_Btn" onclick="javascript: editOrders();" class="btn btn-primary">Edit Orders</button>
 						<p id="Edit_Order_ID" style="display: none"></p>
 					</div>
-					<div id="Payment_Details" style="display: none;">
-						<hr>
-						<h4>Payment Details</h4>
-						<p id="Transaction_Payment_Type"></p>
-						<p id="Transaction_Payment_Discount"></p>
+					<div id="Payment_Details_Complete" style="display: none;">
+						<a id="Payment_Complete_Btn" href="" class="btn btn-success">Payment Complete</a>
 					</div>
 				</div>
 			</div>
