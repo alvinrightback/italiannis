@@ -41,6 +41,12 @@
 									<li><a class="dropdown-item" href="<?php echo base_url('forecasting/product_forecast') ?>">Product Sales</a></li>
 								</ul>
 							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="<?php echo base_url('rewards') ?>">
+									<i class="batch-icon batch-icon-heart-empty"></i>
+									Rewards
+								</a>
+							</li>
 							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle" data-toggle="dropdown" data-flip="false" aria-haspopup="true" aria-expanded="false">
 									<i class="batch-icon batch-icon-clipboard-alt"></i>

@@ -110,25 +110,13 @@ class Mobile extends CI_Controller {
 		}
 	}
 
-	public function register_card(){
-		$query = $this->mobile_model->register_card();
-		if($query){
-			$data['status'] = 1;
-			$data['message'] = 'success';
-			echo json_encode($data);
-		}
-		else{
-			$data['status'] = 0;
-			$data['message'] = 'failed';
-			echo json_encode($data);
- 		}
-	}
-
 	public function check_card(){
-		$query = $this->mobile_model->check_card();
+		$query = $this->mobile_model->check_card($this->input->post('card_string', TRUE));
 		if($query){
 			$data['status'] = 1;
 			$data['message'] = 'success';
+			$data['points'] = $query;
+			$data['discount'] = $this->get_data->get_value('aux_value','auxillary', array('aux_group'=>'reward_discount'));
 			echo json_encode($data);
 		}
 		else{
