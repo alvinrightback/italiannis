@@ -11,20 +11,20 @@
 			'dataType' : 'json',
 			'cache' : false,
 			'success' : function(data){ 
- 					$('#Card_String').text(data['card_details'][0]['card_string']);
+ 					$('#Card_String').val(data['card_details'][0]['card_string']);
 
  					var myTable = $('#table_card_history').DataTable({
  						"paging": true,
  						"lengthChange": false,
  						"searching": true,
  						"ordering": true,
- 						"info": false,
+ 						"info": true,
  						"autoWidth": true,
  						"columns": [{
- 							"title": "Points",
+ 							"title": "Quantity",
  							"data": "points"
  						}, {
- 							"title": "Date",
+ 							"title": "Date Added",
  							"data": "date_created"
 
  						}]
@@ -103,10 +103,50 @@
 					<?php echo form_open('rewards/change_discount_percentage'); ?>
 						<div class="form-group">
 							<label for="exampleFormControlInput1">Current Discount Percentage</label>
-							<input type="number" class="form-control" value="<?php echo $current_discount; ?>" min="0" max="100" id="inputDiscountPercentage" name="inputDiscountPercentage" placeholder="Current Discount Percentage" required>
+							<input type="number" class="form-control" value="<?php echo $current_discount_percentage; ?>" min="0" max="100" id="inputDiscountPercentage" name="inputDiscountPercentage" placeholder="Current Discount Percentage" required>
 						</div>
 
 						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-primary">Update</button>
+						</div>
+					</form>
+		    	</div>
+			</div>
+	</div>
+
+		<div class="modal fade" id="changeRatio" tabindex="-1" role="dialog" aria-labelledby="exampleModalToolTip" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Change Reward Ratio</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<?php echo form_open('rewards/change_reward_ratio'); ?>
+						<div class="form-row align-items-center">
+				
+							<div class="col-auto">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="basic-addon1">&#8369;</span>
+									</div>
+									<input type="number" class="form-control" min="1" value="<?php echo explode(':',$current_reward_ratio)[0] ?>" id="inlineFormInput" name="Amount" placeholder="Amount" required>
+								</div>
+							</div>
+							<div class="col-auto">
+							<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="basic-addon1">Points</span>
+									</div>
+									<input type="number" class="form-control" min="1" value="<?php echo explode(':',$current_reward_ratio)[1] ?>" id="inlineFormInput" name="Points" placeholder="Points" required>
+								</div>
+							</div>
+						</div>
+					</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 							<button type="submit" class="btn btn-primary">Update</button>
@@ -121,11 +161,15 @@
 	<div class="col-md-6 col-lg-6 col-xl-8 mb-5">
 		<div class="card">
 			<div class="card-header">
-				Rewards Card Discount: <span id="discountPercentage"><u><?php echo (int)$current_discount; ?></span>%</u> <button type="button" data-target="#changeDiscountModal" data-toggle="modal" class="btn btn-sm btn-primary">Change</button>
+				Rewards Card Details 
 				<div class="header-btn-block">
-					<button type="button" data-toggle="modal" data-target="#exampleModalToolTip" class="btn btn-primary">
+					<button type="button" data-toggle="modal" data-target="#changeDiscountModal" class="btn btn-primary">
 						<i class="batch-icon batch-icon-add"></i> 
-						New Reward Card
+						Percentage: <span id="discountPercentage"><u><?php echo (int)$current_discount_percentage; ?></span>%</u> 
+					</button>
+					<button type="button" data-toggle="modal" data-target="#changeRatio" class="btn btn-primary">
+						<i class="batch-icon batch-icon-add"></i> 
+						Ratio: <span id="rewardRatio"><u><?php echo 'P'.$current_reward_ratio.'Point'; ?></u></span> 
 					</button>
 				</div>
 			</div>

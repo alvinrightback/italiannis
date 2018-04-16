@@ -5,13 +5,23 @@ class Rewards_model extends CI_Model{
 
 	public function change_discount_percentage(){
 		$newDiscount = $this->input->post('inputDiscountPercentage', TRUE);
-		$query = $this->db->update('auxillary', array('aux_value'=>$newDiscount), array('aux_group'=>'reward_discount'));
+		$query = $this->db->update('auxillary', array('aux_value'=>$newDiscount), array('aux_group'=>'reward_discount_percentage'));
 
 		if($query){
 			return TRUE;
 		}
 	}
-	
+
+	public function change_reward_ratio(){
+		$temp = array($this->input->post('Amount', TRUE), $this->input->post('Points', TRUE));
+		$newRatio = implode(':', $temp);
+		$query = $this->db->update('auxillary', array('aux_value'=>$newRatio), array('aux_group'=>'reward_ratio'));
+
+		if($query){
+			return TRUE;
+		}
+	}
+
 	public function add(){
 
 		$this->db->trans_start();

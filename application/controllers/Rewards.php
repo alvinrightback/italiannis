@@ -15,7 +15,8 @@ class Rewards extends MY_Controller {
 		$data['success'] = $this->session->flashdata('success');
 		$data['failed'] = $this->session->flashdata('failed');
 		$data['cards'] = $this->get_data->get_all_value_and_order_by('card', 'date_created', 'desc');
-		$data['current_discount'] = $this->get_data->get_value('aux_value','auxillary', array('aux_group'=>'reward_discount'));
+		$data['current_discount_percentage'] = $this->get_data->get_value('aux_value','auxillary', array('aux_group'=>'reward_discount_percentage'));
+		$data['current_reward_ratio'] = $this->get_data->get_value('aux_value','auxillary', array('aux_group'=>'reward_ratio'));
 		$this->render('rewards/main', $data);
 	}
 
@@ -35,6 +36,28 @@ class Rewards extends MY_Controller {
 		}
 		else{
 			$query = $this->rewards_model->change_discount_percentage();
+			if($query){
+				$this->session->set_flashdata('success', 'Successful!');
+				redirect('rewards');
+			}
+			else{
+				$this->session->set_flashdata('failed', 'Failed!');
+				redirect('rewards');
+				}
+		}
+	}
+
+	public function change_reward_ratio(){
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('Amount', 'Amount', 'trim|strip_tags');
+		$this->form_validation->set_rules('Points', 'Points', 'trim|strip_tags');
+
+		if($this->form_validation->run() == FALSE){
+			$this->session->set_flashdata('failed', 'Failed!');
+			$this->index();
+		}
+		else{
+			$query = $this->rewards_model->change_reward_ratio();
 			if($query){
 				$this->session->set_flashdata('success', 'Successful!');
 				redirect('rewards');
