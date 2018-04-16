@@ -4,7 +4,7 @@ class Mobile_model extends CI_Model{
 
 
 	public function get_menu(){
-		$this->db->select('aux_id, aux_value');
+		$this->db->select('*');
 		$this->db->from('auxillary');
 		$this->db->where('aux_group', 'product_category');
 		$this->db->order_by('aux_value', 'desc');
@@ -13,7 +13,7 @@ class Mobile_model extends CI_Model{
 			foreach($query->result() as $key1=>$row1){
 				$data[] = $row1;
 
-				$this->db->select('product_id, name, inventory_id');
+				$this->db->select('*');
 				$this->db->from('product');
 				$this->db->where('product_category_id', $row1->aux_id);
 				$this->db->order_by('name', 'desc');
