@@ -11,14 +11,14 @@
 			'dataType' : 'json',
 			'cache' : false,
 			'success' : function(data){ 
- 					$('#Card_String').val(data['card_details'][0]['card_string']);
+ 					$('#Card_String').text(data['card_details'][0]['card_string']);
 
  					var myTable = $('#table_card_history').DataTable({
  						"paging": true,
  						"lengthChange": false,
  						"searching": true,
  						"ordering": true,
- 						"info": true,
+ 						"info": false,
  						"autoWidth": true,
  						"columns": [{
  							"title": "Quantity",
@@ -164,11 +164,11 @@
 				Rewards Card Details 
 				<div class="header-btn-block">
 					<button type="button" data-toggle="modal" data-target="#changeDiscountModal" class="btn btn-primary">
-						<i class="batch-icon batch-icon-add"></i> 
+						<i class="batch-icon batch-icon-pencil"></i> 
 						Percentage: <span id="discountPercentage"><u><?php echo (int)$current_discount_percentage; ?></span>%</u> 
 					</button>
 					<button type="button" data-toggle="modal" data-target="#changeRatio" class="btn btn-primary">
-						<i class="batch-icon batch-icon-add"></i> 
+						<i class="batch-icon batch-icon-pencil"></i> 
 						Ratio: <span id="rewardRatio"><u><?php echo 'P'.$current_reward_ratio.'Point'; ?></u></span> 
 					</button>
 				</div>
@@ -219,8 +219,8 @@
 						<table id="table_card_history" class="table table-sm table-bordered table-hover">
 							<thead class="thead-light">
 								<tr>
-									<th>Quantity</th>
-									<th>Date Updated</th>
+									<th>Points</th>
+									<th>Date</th>
 								</tr>
 							</thead>
 							<tbody>
