@@ -82,8 +82,8 @@
 					
 					if(data[0].payment){
 						myTable.row.add({name: " ", price: " ", quantity: "Subtotal", total: subtotal, order_status: " "});
-						if(data[0].payment[0].discount == 1){
-							myTable.row.add({name: " ", price: " ", quantity: "Discount card (20%)", total: subtotal-parseInt(data[0].payment[0].total), order_status: " "});	
+						if(data[0].payment[0].discount != 0){
+							myTable.row.add({name: " ", price: " ", quantity: "Discount card (20%)", total: parseInt(data[0].payment[0].discount), order_status: " "});	
 						}
 						myTable.row.add({name: " ", price: " ", quantity: "Total", total: parseInt(data[0].payment[0].total), order_status : " "});
 						myTable.row.add({name: " ", price: " ", quantity: "Payment Type", total: data[0].payment[0].payment_type == 1? 'Cash':'Card', order_status : " "});
