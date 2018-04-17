@@ -223,16 +223,11 @@ class Mobile_model extends CI_Model{
 		}
 	}
 
-	public function register_card(){
-		$query = $this->db->insert('card', array('card_string'=>$this->input->post('card_string', TRUE), 'date_created'=>date('Y-m-d h:i:s')));
-		if($query){
-			return TRUE;
-		}
-	}
-	public function check_card(){
-		$query = $this->db->get_where('card', array('card_string'=>$this->input->post('card_string', TRUE)));
-		if($query){
-			return TRUE;
+	public function check_card($card_string){
+		$this->db->limit(1);
+		$query = $this->db->get_where('card', array('card_string'=>$card_string));
+		if($query->num_row() == 1){
+			return $query->result()[0]->points;
 		}
 	}
 }
