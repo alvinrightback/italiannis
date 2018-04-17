@@ -111,12 +111,12 @@ class Mobile extends CI_Controller {
 	}
 
 	public function check_card(){
-		$query = $this->mobile_model->check_card($this->input->post('card_string', TRUE));
+		$query = $this->get_data->get_value_where('card', array('card_string' => $this->input->post('card_string', TRUE)));
 		if($query){
 			$data['status'] = 1;
 			$data['message'] = 'success';
-			$data['points'] = $query;
-			$data['discount'] = $this->get_data->get_value('aux_value','auxillary', array('aux_group'=>'reward_discount'));
+			$data['points'] = $this->get_data->get_value('points', 'card', array('card_string'=>$this->input->post('card_string', TRUE)));
+			$data['discount_percentage'] = $this->get_data->get_value('aux_value','auxillary', array('aux_group'=>'reward_discount_percentage'));
 			echo json_encode($data);
 		}
 		else{
@@ -124,5 +124,26 @@ class Mobile extends CI_Controller {
 			$data['message'] = 'failed';
 			echo json_encode($data);
  		}
+	}
+
+	public function register_card(){
+		if(!$this->get_data->get_value_where('card', array('card_string'=> $this->input->post('card_string')))){
+			$query = $this->mobile_model->register_card();
+			if($query){
+				$data['status'] = 1;
+				$data['message'] = 'Registration Successful';
+				echo json_encode($data);
+			}
+			else{
+				$data['status'] = 0;
+				$data['message'] = 'failed';
+				echo json_encode($data);
+			}
+		}
+		else{
+			$data['status'] = 0;
+			$data['message'] = 'card already registered';
+			echo json_encode($data);
+		}	
 	}
 }

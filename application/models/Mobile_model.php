@@ -181,17 +181,65 @@ class Mobile_model extends CI_Model{
 		$this->db->where('status', 0);
 		$this->db->where('DATE(date_created)', date('Y-m-d'));
 		$this->db->limit(1);
-		$query = $this->db->get();
-		if($query->num_rows() == 1){
+		$trans_id = $this->db->get()->row()->trans_id;
+		if($trans_id){
 			$this->db->trans_start();
 
-			$data = array('trans_id' => $query->result()[0]->trans_id,
-						  'payment_type' => $this->input->post('payment_type', TRUE),
-						  'discount' => $this->input->post('discount', TRUE),
-						  'total' => $this->input->post('total', TRUE)
-			);
-			$this->db->insert('transaction_payment', $data);
-			$this->db->update('transaction', array('status' => 1), array('trans_id'=> $query->result()[0]->trans_id));
+			$total = $this->input->post('total', TRUE);
+			$discount = $this->input->post('discount', TRUE);
+			$payment_type = $this->input->post('payment_type', TRUE);
+			$card_string = $this->input->post('card_string', TRUE);
+
+			if($discount != 0){
+				$current_points = $this->db->get_where('card', array('card_string'=>$card_string), 1)->row()->points;
+				$reward_ratio = $this->db->get_where('auxillary', array('aux_group'=>'reward_ratio'), 1)->row()->aux_value;
+				$add = ( (int)$total / (int)(explode(':', $reward_ratio)[0])) * (int)(explode(':', $reward_ratio)[1]);
+
+				if($this->input->post('rewards_payment', TRUE)){
+					$deducted = (int)$current_points - (int)$this->input->post('rewards_payment', TRUE);
+					$new_points = $deducted + $add;
+					$point_change = '-'.((int)$this->input->post('rewards_payment', TRUE));
+
+					$payment_data = array('trans_id' => $trans_id,
+					'payment_type' => $payment_type,
+					'discount' => $discount,
+					'discount_percentage' => $this->input->post('discount_percentage', TRUE),
+					'rewards_payment' => $this->input->post('rewards_payment', TRUE),
+					'total' => $total
+					);
+				}
+				else{
+					$new_points = (int)$current_points + $add;
+					$point_change = '+'.((int)$add);
+
+					$payment_data = array('trans_id' => $trans_id,
+					'payment_type' => $payment_type,
+					'discount' => $discount,
+					'discount_percentage' => $this->input->post('discount_percentage', TRUE),
+					'total' => $total
+					);
+				}
+				$new_history = array('card_id' => $this->db->get_where('card', array('card_string'=>$card_string), 1)->row()->card_id,
+									 'points' => $point_change,
+									 'date_created' => date('Y-m-d h:i:sa'),
+									 'created_by' => 1						
+				);
+				$this->db->insert('card_history',$new_history);
+
+				$this->db->update('card', array('points'=>$new_points), array('card_string'=>$card_string));
+
+				
+			}
+			else{
+				$payment_data = array('trans_id' => $trans_id,
+				'payment_type' => $payment_type,
+				'discount' => $discount,
+				'total' => $total
+				);
+			}
+			
+			$this->db->insert('transaction_payment', $payment_data);
+			$this->db->update('transaction', array('status' => 1), array('trans_id'=> $trans_id));
 
 			$query = $this->db->trans_complete();
 			if($query){
@@ -224,10 +272,36 @@ class Mobile_model extends CI_Model{
 	}
 
 	public function check_card($card_string){
-		$this->db->limit(1);
-		$query = $this->db->get_where('card', array('card_string'=>$card_string));
-		if($query->num_row() == 1){
+		$query = $this->db->get_where('card', array('card_string'=>$card_string), 1);
+		if($query->num_rows() == 1){
 			return $query->result()[0]->points;
+		}
+	}
+
+	public function register_card(){
+
+		$this->db->trans_start();
+		$data = array(
+			'card_string' => $this->input->post('card_string', TRUE),
+			'points' => $this->input->post('initial_value', TRUE),
+			'created_by' => 1,
+			'date_created' => date('Y-m-d h:i:s')
+			);
+
+		$this->db->insert('card', $data);
+	
+		$data = array(
+			'card_id' => $this->db->insert_id(),
+			'points' => $this->input->post('initial_value', TRUE),
+			'created_by' => 1,
+		    'date_created' => date('Y-m-d h:i:s')
+		);
+		$this->db->insert('card_history', $data);
+
+		$query = $this->db->trans_complete();
+		
+		if($query){
+			return TRUE;
 		}
 	}
 }
