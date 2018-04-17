@@ -11,7 +11,7 @@
 			'dataType' : 'json',
 			'cache' : false,
 			'success' : function(data){ 
- 					$('#Card_String').text(data['card_details'][0]['card_string']);
+ 					$('#Card_String').text('Card String: '+data['card_details'][0]['card_string']);
 
  					var myTable = $('#table_card_history').DataTable({
  						"paging": true,
@@ -29,12 +29,14 @@
 
  						}]
 					 });
-				
+					var trans_count = 0;
  					myTable.clear();
  					$.each(data['card_history'], function(index, value) {
+						trans_count = trans_count + 1;
  						myTable.row.add(value);
  					});
- 					myTable.draw();
+					 myTable.draw();
+					 $('#Transaction_Count').text('Transaction Count: '+ (trans_count-1));
  				},
 			'complete' : function(){
 				$('#Card_Details_Progress').css('display', 'none');
@@ -213,7 +215,8 @@
 				</div>
 
 				<div id="Card_Details_Body" style="display: none;">
-					<h2 id="Card_String">Card String</h2>
+					<p id="Card_String">Card String</p>
+					<p id="Transaction_Count">Transaction Count</p>
 					
 					<div class="table-responsive">
 						<table id="table_card_history" class="table table-sm table-bordered table-hover">
