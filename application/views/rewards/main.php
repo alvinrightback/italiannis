@@ -11,8 +11,19 @@
 			'dataType' : 'json',
 			'cache' : false,
 			'success' : function(data){ 
- 					$('#Card_String').text('Card String: '+data['card_details'][0]['card_string']);
-
+					$('#Card_String').text('Card String: '+data['card_details'][0]['card_string']);
+					// if(data['card_details'][0]['status'] == 1){
+					// 	$('#Card_Status').removeClass('badge-danger');
+					// 	$('#Card_Status').addClass('badge-success');
+					// 	$('#Card_Status').text('Active');
+					// }
+					// else{
+					// 	$('#Card_Status').removeClass('badge-success');
+					// 	$('#Card_Status').addClass('badge-danger');
+					// 	$('#Card_Status').text('Inactive');
+					// }
+					
+					
  					var myTable = $('#table_card_history').DataTable({
  						"paging": true,
  						"lengthChange": false,
@@ -208,6 +219,9 @@
 		<div class="card">
 			<div class="card-header">
 				Card History
+				<div class="header-btn-block">
+				<!-- <span id="Card_Status" class="badge"></span> -->
+				</div>
 			</div>
 			<div class="card-body">
 				<div id="Card_Details_Progress" style="display: none;" class="progress">

@@ -272,7 +272,7 @@ class Mobile_model extends CI_Model{
 	}
 
 	public function check_card($card_string){
-		$query = $this->db->get_where('card', array('card_string'=>$card_string), 1);
+		$query = $this->db->get_where('card', array('card_string'=>$card_string, 'status'=> 1), 1);
 		if($query->num_rows() == 1){
 			return $query->result()[0]->points;
 		}
