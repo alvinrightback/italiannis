@@ -34,15 +34,22 @@ class Product extends MY_Controller {
 			$this->index();
 		}
 		else{
-			$query = $this->product_model->do_upload('add');
-			if($query){
-				$this->session->set_flashdata('success', 'Successful!');
-				redirect('product');
+			if($this->input->post('inventory_id', TRUE)){
+				$query = $this->product_model->do_upload('add');
+				if($query){
+					$this->session->set_flashdata('success', 'Successful!');
+					redirect('product');
+				}
+				else{
+					$this->session->set_flashdata('failed', 'Failed!');
+					redirect('product');
+				}
 			}
 			else{
-				$this->session->set_flashdata('failed', 'Failed!');
+				$this->session->set_flashdata('failed', 'Please add at least 1 ingredient!');
 				redirect('product');
 			}
+			
 			
 		}
 	}

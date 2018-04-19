@@ -126,6 +126,36 @@ class Mobile extends CI_Controller {
  		}
 	}
 
+	public function get_card_status(){
+		$query = $this->get_data->get_value('status', 'card', array('card_string'=>$this->input->post('card_string', TRUE)));
+		if($query){
+			$data['status'] = 1;
+			$data['message'] = 'success';
+			$data['card_status'] = $query;
+			echo json_encode($data);
+		}
+		else{
+			$data['status'] = 0;
+			$data['message'] = 'failed';
+			echo json_encode($data);
+ 		}
+	}
+
+	public function change_card_status(){
+		$query = $this->mobile_model->change_card_status($this->input->post('card_string', TRUE), $this->input->post('new_status', TRUE));
+		if($query){
+			$data['status'] = 1;
+			$data['message'] = 'success';
+			echo json_encode($data);
+		}
+		else{
+			$data['status'] = 0;
+			$data['message'] = 'failed';
+			echo json_encode($data);
+ 		}
+	}
+
+
 	public function register_card(){
 		if(!$this->get_data->get_value_where('card', array('card_string'=> $this->input->post('card_string')))){
 			$query = $this->mobile_model->register_card();
