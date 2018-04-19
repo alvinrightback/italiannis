@@ -278,6 +278,13 @@ class Mobile_model extends CI_Model{
 		}
 	}
 
+	public function change_card_status($card_string, $new_status){
+		$query = $this->db->update('card', array('status'=>$new_status), array('card_string'=>$card_string));
+		if($query){
+			return TRUE;
+		}		
+	}
+
 	public function register_card(){
 
 		$this->db->trans_start();
