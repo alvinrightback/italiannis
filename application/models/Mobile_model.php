@@ -296,7 +296,19 @@ class Mobile_model extends CI_Model{
 			);
 
 		$this->db->insert('card', $data);
-	
+			
+		$data = array(
+			'card_id' => $this->db->insert_id(),
+			'fullname' => $this->input->post('fullname', TRUE),
+			'age' => $this->input->post('age', TRUE),
+			'birthdate' => $this->input->post('birthdate', TRUE),
+			'photo_base64' => $this->input->post('photo_base64', TRUE),
+			'created_by' => 1,
+		    'date_created' => date('Y-m-d h:i:s')
+		);
+
+		$this->db->insert('card_details', $data);
+
 		$data = array(
 			'card_id' => $this->db->insert_id(),
 			'points' => $this->input->post('initial_value', TRUE),
@@ -309,6 +321,19 @@ class Mobile_model extends CI_Model{
 		
 		if($query){
 			return TRUE;
+		}
+	}
+	
+	public function get_card_fullname($card_string){
+
+		$this->db->select('card_details.fullname');
+		$this->db->from('card');
+		$this->db->join('card_details', 'card_details.card_id = card.card_id');
+		$this->db->where('card.card_string', $card_string);
+		$this->db->limit(1);
+		$fullname = $this->db->get()->row()->fullname;
+		if($fullname){
+			return $fullname;
 		}
 	}
 }

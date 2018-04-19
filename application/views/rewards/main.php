@@ -12,6 +12,13 @@
 			'cache' : false,
 			'success' : function(data){ 
 					$('#Card_String').text('Card String: '+data['card_details'][0]['card_string']);
+					$('#Card_Fullname').text('Fullname: '+data['card_details'][0]['fullname']);
+					$('#Card_Age').text('Age: '+data['card_details'][0]['age']);
+					$('#Card_Birthdate').text('Birthdate: '+data['card_details'][0]['birthdate']);
+
+					// var image = new Image();
+					// image.src =
+					$('#Card_Details_Image').attr('src', data['card_details'][0]['photo_base64']);
 					// if(data['card_details'][0]['status'] == 1){
 					// 	$('#Card_Status').removeClass('badge-danger');
 					// 	$('#Card_Status').addClass('badge-success');
@@ -217,8 +224,9 @@
 	</div>
 	<div id="Card_Details" style="display: none;" class="col-md-6 col-lg-6 col-xl-4 mb-5">
 		<div class="card">
+		<img id="Card_Details_Image" style="display: ;" class="card-img-top" src="assets/img/bg-image-1.jpg" alt="Card Image">
 			<div class="card-header">
-				Card History
+				Card Details
 				<div class="header-btn-block">
 				<!-- <span id="Card_Status" class="badge"></span> -->
 				</div>
@@ -230,8 +238,12 @@
 
 				<div id="Card_Details_Body" style="display: none;">
 					<p id="Card_String">Card String</p>
+					<p id="Card_Fullname">Card Name</p>
+					<p id="Card_Age">Card Age</p>
+					<p id="Card_Birthdate">Card Birthdate</p>
 					<p id="Transaction_Count">Transaction Count</p>
-					
+					<hr>
+					<p><b>Card History</b></p>
 					<div class="table-responsive">
 						<table id="table_card_history" class="table table-sm table-bordered table-hover">
 							<thead class="thead-light">

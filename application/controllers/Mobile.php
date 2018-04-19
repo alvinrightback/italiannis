@@ -117,6 +117,7 @@ class Mobile extends CI_Controller {
 			$data['message'] = 'success';
 			$data['points'] = $this->get_data->get_value('points', 'card', array('card_string'=>$this->input->post('card_string', TRUE)));
 			$data['discount_percentage'] = $this->get_data->get_value('aux_value','auxillary', array('aux_group'=>'reward_discount_percentage'));
+			$data['fullname'] = $this->mobile_model->get_card_fullname($this->input->post('card_string', TRUE));
 			echo json_encode($data);
 		}
 		else{
@@ -175,5 +176,9 @@ class Mobile extends CI_Controller {
 			$data['message'] = 'card already registered';
 			echo json_encode($data);
 		}	
+	}
+
+	public function get_timezone(){
+		echo date_default_timezone_get();
 	}
 }

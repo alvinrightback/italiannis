@@ -21,7 +21,7 @@ class Rewards extends MY_Controller {
 	}
 
 	public function get_card_details(){
-		$data['card_details'] = $this->get_data->get_value_where('card', array('card_id' => $this->input->post('id', TRUE)));
+		$data['card_details'] = $this->rewards_model->get_card_details($this->input->post('id', TRUE));
 		$data['card_history'] = $this->get_data->get_value_where_and_order_by('card_history', array('card_id' => $this->input->post('id', TRUE)), 'date_created', 'desc');
 		echo json_encode($data);
 	}
