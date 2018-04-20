@@ -52,7 +52,7 @@
 	function getTransactionDetails(id){
 		$('#table_orders').DataTable().destroy();
 		$('#Transaction_Details, #Transaction_Details_Progress').css('display', 'block');
-		$('#Transaction_Details_Body, #Payment_Details_Complete, #Transaction_Details_Status, #Transaction_Edit_Orders').css('display', 'none');
+		$('#Transaction_Details_Body, #Payment_Details_Complete, #Transaction_Details_Status, #Transaction_Edit_Orders, #Transaction_Discount_Cardholder_Name').css('display', 'none');
 		$('#Transaction_Details_Status').removeAttr( "class");
 		$('#Edit_Order_ID').text('');
 		$.ajax({
@@ -66,6 +66,15 @@
 					$('#Transaction_Invoice_ID').text('Invoice ID: '+data[0].invoice_id);
 					$('#Transaction_Table_Number').text('Table number: '+data[0].table_number);
  					$('#Transaction_Date').text('Date: '+data[0].date_created);
+					 //continue here
+					if(data[0].payment){
+						if(data[0].payment[0].fullname != null && data[0].payment[0].fullname != ''){
+							$('#Transaction_Discount_Cardholder_Name').css('display', 'block');	
+							$('#Transaction_Discount_Cardholder_Name').text('Cardholder Name: '+data[0].payment[0].fullname);
+						}
+					}
+					
+					
 					$('#Edit_Order_ID').text(data[0].trans_id);
 					if(data[0].status == 0){
 						$('#Transaction_Details_Status').addClass("badge badge-warning");
@@ -295,6 +304,7 @@
 					<p id="Transaction_Invoice_ID"></p>
 					<p id="Transaction_Table_Number"></p>
 					<p id="Transaction_Date"></p>
+					<p style="display: none;" id="Transaction_Discount_Cardholder_Name"></p>
 					<hr>
 					<h4>Orders</h4>
 					<div class="table-responsive">

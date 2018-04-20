@@ -205,6 +205,7 @@ class Mobile_model extends CI_Model{
 					'discount' => $discount,
 					'discount_percentage' => $this->input->post('discount_percentage', TRUE),
 					'rewards_payment' => $this->input->post('rewards_payment', TRUE),
+					'card_id' => $this->db->get_where('card', array('card_string'=>$card_string), 1)->row()->card_id,
 					'total' => $total
 					);
 				}
@@ -216,6 +217,7 @@ class Mobile_model extends CI_Model{
 					'payment_type' => $payment_type,
 					'discount' => $discount,
 					'discount_percentage' => $this->input->post('discount_percentage', TRUE),
+					'card_id' => $this->db->get_where('card', array('card_string'=>$card_string), 1)->row()->card_id,
 					'total' => $total
 					);
 				}
