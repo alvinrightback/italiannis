@@ -1,4 +1,53 @@
 <script type="text/javascript">
+	function getAllTransactions(){
+		$.ajax({
+			'url' : '<?php  echo base_url('transaction/get_all_transactions/'); ?>',
+			'type' : 'POST', 
+			'dataType' : 'json',
+			'cache' : false,
+			'success' : function(data){ 
+				$('#datatable-1').DataTable().clear();
+				$('#datatable-1').DataTable().destroy();
+				$.each(data, function(index, value){
+				
+					var label;
+					var badge;
+					var spanID = '#span'+value.trans_id;
+					if(value.status == 0){
+						badge = "badge-warning";
+						label ='Pending';
+					}
+					else if(value.status == 1){
+						badge = "badge-info";
+						label = 'Bill-out';
+					}
+					else if(value.status == 2){
+						badge = "badge-success";
+						label = 'Completed';
+					}
+					else{
+						//do nothing
+					}
+					$('#datatable-1').append('<tr style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="View Transaction" onclick="javascript:getTransactionDetails('+value.trans_id+')"><td>'+value.invoice_id+'</td><td>'+value.table_number+'</td><td>'+value.date_created+'</td><td class="text-center"><span id="span'+value.trans_id+'" class"badge"></span></td></tr>');
+					$(spanID).addClass(badge);
+					$(spanID).text(label);
+				})
+				$("#datatable-1").DataTable({
+					"bSort": false,
+					"paging": true,
+ 					"lengthChange": false,
+ 					"searching": true,
+ 					"info": false,
+ 					"autoWidth": false,
+				});
+					
+ 				}
+ 			});
+	}
+	window.setInterval(function(){
+		getAllTransactions();
+	}, 5000);
+	
 	
 	function getTransactionDetails(id){
 		$('#table_orders').DataTable().destroy();
@@ -211,10 +260,8 @@
 				Transactions
 			</div>
 			<div class="card-body">
-
-				<?php if(is_array($transaction)): ?>
 					<div class="table-responsive">
-						<table id="datatable-1" class="table table-datatable table-bordered table-hover">
+						<table id="datatable-1" class="table table-bordered table-hover" data-page-length='10'>
 							<thead class="thead-dark">
 								<tr>
 									<th>Invoice ID</th>	
@@ -224,32 +271,10 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach($transaction as $row): ?>
-									<tr style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="View Transaction" onclick="javascript:getTransactionDetails(<?php echo $row->trans_id; ?>)">
-										<td><?php echo $row->invoice_id; ?></td>
-										<td><?php echo $row->table_number; ?></td>
-										<td><?php echo date('Y-m-d h:i A', strtotime($row->date_created));	 ?></td>
-										<td class="text-center">
-											<span class="badge 
-												<?php if($row->status == 0){echo 'badge-warning';} 
-													  else if($row->status == 1){echo 'badge-info';}
-													  else if($row->status == 2){echo 'badge-success';}
-													  else{echo '';}	
-												?>">
-												<?php if($row->status == 0){echo 'Pending';} 
-													  else if($row->status == 1){echo 'Bill-out';}
-													  else if($row->status == 2){echo 'Completed';}
-													  else{echo '';}	
-												?>
-										</td>
-									</tr>
-								<?php endforeach; ?>
+								
 							</tbody>
 						</table>
 					</div>
-				<?php else: ?>
-					<p>No data found.</p>
-				<?php endif; ?>
 			</div>
 		</div>
 	</div>

@@ -18,6 +18,9 @@ class Transaction extends MY_Controller {
 		$this->render('transaction/main', $data);
 	}
 
+	public function get_all_transactions(){
+		echo json_encode($this->get_data->get_all_value_and_order_by('transaction', 'date_created', 'desc'));
+	}
 	public function get_transaction_details(){
 		echo json_encode($this->transaction_model->get_transaction_details());
 	}
